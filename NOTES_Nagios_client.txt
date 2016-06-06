@@ -1,0 +1,122 @@
+#### Problem Statement installing Nagios NRPE on Centos 7 
+#### our client will be under 192.168.33.85 (democlient.sridemo.com)
+### The steps are similar to that of adding Server (NOTES_Nagios_server_install.txt), 
+### Except that LAMP and Nagios core will not be installed. You only need to install
+### Plugins and NRPE (dependency xinetd to be installed)
+### After doing the same, 
+#Check permissions.. 
+chown nagios.nagios /usr/local/nagios
+chown -R nagios.nagios /usr/local/nagios/libexec
+
+#Now open /etc/xinetd.d/nrpe file and add the localhost and IP address of the Nagios Monitoring Server.
+#only_from = 127.0.0.1 localhost <nagios_ip_address>
+#Next, open /etc/services file add the following entry for the NRPE daemon at the bottom of the file.
+nrpe            5666/tcp                 NRPE
+#Restart Xinetd 
+service xinetd restart
+#Verify NRPE Daemon Locally
+netstat -at | grep nrpe
+#tcp        0      0 *:nrpe                      *:*                         LISTEN
+#If you get output similar to above, means it working correctly. If not, make sure to check the following things.
+#Verify using  /usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 #To match only_fro
+
+
+#Optional: 
+Make sure that the Firewall on the local machine will allow the NRPE daemon to be accessed from remote servers. To do this, run the following iptables command.
+ iptables -A INPUT -p tcp -m tcp --dport 5666 -j ACCEPT
+ service iptables save
+# Notes on Firewall on Centos: You cannot have both firewalld and iptables run at same time. So you need to stop firewalld and enable iptables
+systemctl stop firewalld
+systemctl mask firewalld
+yum install iptables-services
+systemctl enable iptables
+systemctl [stop|start|restart] iptables
+service iptables save
+/usr/libexec/iptables/iptables.init save
+# files of importance: /etc/sysconfig/ip6tables-config, /etc/sysconfig/ip4tables-config 
+
+##### Next steps.. 
+
+Verify using the local commands: 
+
+/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_users
+/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_load
+/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_hda1
+/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_total_procs
+/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_zombie_procs
+
+
+#### On servers
+# Set up 2 files : hosts.cfg, services.cfg 
+touch /usr/local/nagios/etc/objects/hosts.cfg
+touch /usr/local/nagios/etc/objects/services.cfg
+#edit the nagios.cfg file and ensure above 2 files are present
+vi /usr/local/nagios/etc/nagios.cfg
+cfg_file=/usr/local/nagios/etc/objects/hosts.cfg
+cfg_file=/usr/local/nagios/etc/objects/services.cfg
+
+#add below to hosts.cfg file
+## Default Linux Host Template ##
+define host{
+name                            linux-box               ; Name of this template
+use                             generic-host            ; Inherit default values
+check_period                    24x7        
+check_interval                  5       
+retry_interval                  1       
+max_check_attempts              10      
+check_command                   check-host-alive
+notification_period             24x7    
+notification_interval           30      
+notification_options            d,r     
+contact_groups                  admins  
+register                        0                       ; DONT REGISTER THIS - ITS A TEMPLATE
+}
+
+## Default
+define host{
+use                             linux-box               ; Inherit default values from a template
+host_name                       democlient		        ; The name we're giving to this server
+alias                           Centos7              ; A longer name for the server
+address                         192.168.33.85            ; IP address of Remote Linux host
+}
+
+### services.cfg
+define service{
+        use                     generic-service
+        host_name               democlient
+        service_description     CPU Load
+        check_command           check_nrpe!check_load
+        }
+
+define service{
+        use                     generic-service
+        host_name               democlient
+        service_description     Total Processes
+        check_command           check_nrpe!check_total_procs
+        }
+
+define service{
+        use                     generic-service
+        host_name               democlient
+        service_description     Current Users
+        check_command           check_nrpe!check_users
+        }
+
+define service{
+        use                     generic-service
+        host_name               democlient
+        service_description     SSH Monitoring
+        check_command           check_nrpe!check_ssh
+        }
+
+define service{
+        use                     generic-service
+        host_name               democlient
+        service_description     FTP Monitoring
+        check_command           check_nrpe!check_ftp
+        }
+
+#vi /usr/local/nagios/etc/objects/commands.cfg
+#Validate config
+/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+service nagios restart
