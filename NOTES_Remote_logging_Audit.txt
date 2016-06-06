@@ -1,0 +1,74 @@
+### Probem Statement
+# 192.168.33.80 (demo1.sridemo.com) will be our central log server
+# 192.168.33.81 (demo2.sridemo.com) Centos server will send logs to 80
+# 192.168.33.82 (proxy.sridemo.com) Ubuntu server will send logs to 80
+# Setup Remote Logging on Ubuntu 14.04 Server version 
+# adapt as per your version. DO NOT ASK ME FOR VERSION DIFFERENCE
+# Steps: 
+#	Edit /etc/rsyslog.conf file and uncomment following lines
+			# provides UDP syslog reception
+			#$ModLoad imudp
+			#$UDPServerRun 514
+			# provides TCP syslog reception
+			#$ModLoad imtcp
+			#$InputTCPServerRun 514
+cat /etc/rsyslog.conf | sed 's/#$\(ModLoad\)/$\1/g;s/#$\(UDPServerRun\)/$\1/g;s/#$\(InputTCPServerRun\)/$\1/g'> /tmp/x.txt
+cat /tmp/x.txt  > /etc/rsyslog.conf
+rm /tmp/x.txt
+#    restart rsyslogd
+sudo service rsyslog restart
+
+# Setup Remote Logging on Ubuntu 14.04 Client version 
+# adapt as per your version. DO NOT ASK ME FOR VERSION DIFFERENCE
+# Steps: 
+#   Create a file 10-rsyslog.conf inside /etc/rsyslog.d folder 
+#   include the following line in this file
+		*.*   @remote.server:514
+#    restart rsyslogd
+sudo echo "*.* 	@demo1.sridemo.com:514" > /etc/rsyslog.d/10-rsyslog.conf
+sudo service rsyslog restart
+# test the same.... on client
+logger -n demo1.sridemo.com "THIS IS A TEST"
+# Verify on server
+tail -f /var/log/syslog # you should see the above message.. 
+
+# Setup Remote Logging on Centos Client version 
+# adapt as per your version. DO NOT ASK ME FOR VERSION DIFFERENCE
+# Steps: 
+#        Uncomment lines related to forwarding rules
+#        restart syslog
+/sbin/service rsyslog restart
+### Install AUDIT 
+## On Ubuntu/Debian
+sudo apt-get install auditd audispd-plugins
+## On RHEL/Centos (usually already installed)
+sudo yum install  audit audit-libs
+# to persist rules, /etc/audit/audit.rules must be saved.. 
+#Config files:     /etc/audit/auditd.conf
+#Components
+Kernel:
+    audit: hooks into the kernel to capture events and deliver them to auditd
+Binaries:
+    auditd: daemon to capture events and store them (log file)
+    auditctl: client tool to configure auditd
+    audispd: daemon to multiplex events
+    aureport: reporting tool which reads from log file (auditd.log)
+    ausearch: event viewer (auditd.log)
+    autrace: using audit component in kernel to trace binaries
+    aulast: similar to last, but instaed using audit framework
+    aulastlog: similar to lastlog, also using audit framework instead
+    ausyscall: map syscall ID and name
+    auvirt: displaying audit information regarding virtual machines
+	
+# examples: 
+sudo auditctl -l # List all rules
+sudo auditctl -D # Delete all rules 
+sudo auditctl -a exit,always -F path=/etc/passwd -F perm=wa # monitor /etc/passwd for changes
+sudo ausearch -f /etc/passwd # Check for auditevents
+sudo ausyscall `uname -m` 188 # get syscall information...
+sudo auditctl -R /etc/audit/audit.rules #refresh rules.. 
+sudo autrace /bin/ls /tmp # trace performance of audit.. Rules have to be deleted.. 
+sudo ausearch -i -p <pid> # search report.. 
+sudo ausearch --start recent -p 21023 --raw | aureport --file --summary # report summary files... 	
+sudo auditctl -a exit,always -F arch=`uname -m` -S open -F auid=80 # Per user auditing
+############################
