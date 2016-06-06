@@ -1,0 +1,14 @@
+#Install HTTPD server
+sudo yum install httpd
+#Make it start on different boot levels
+sudo chkconfig --levels 235 httpd on
+#(Optional)	Enable name-based virtual hosting on port 80
+    #Open the httpd configuration file located at /etc/httpd/conf/httpd.conf
+    #Un-comment the line containing the text NameVirtualHost *:80
+    #Save the file
+    #Restart the Apache HTTP Server daemon
+    #sudo service httpd restart
+    #Note: Ignore the "NameVirtualHost *:80 has no VirtualHosts" warning for now.
+# If You are unable to do so, add firewall support......
+sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+# Do not forget to save it (/etc/sysconfig/iptables) and restart the same...
