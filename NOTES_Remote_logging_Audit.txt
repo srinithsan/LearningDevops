@@ -3,6 +3,7 @@
 # 192.168.33.81 (demo2.sridemo.com) Centos server will send logs to 80
 # 192.168.33.82 (proxy.sridemo.com) Ubuntu server will send logs to 80
 # Setup Remote Logging on Ubuntu 14.04 Server version 
+# Also setup logrotated on Ubuntu 14.04 and demonstrate audit subsystem... 
 # adapt as per your version. DO NOT ASK ME FOR VERSION DIFFERENCE
 # Steps: 
 #	Edit /etc/rsyslog.conf file and uncomment following lines
@@ -72,3 +73,24 @@ sudo ausearch -i -p <pid> # search report..
 sudo ausearch --start recent -p 21023 --raw | aureport --file --summary # report summary files... 	
 sudo auditctl -a exit,always -F arch=`uname -m` -S open -F auid=80 # Per user auditing
 ############################
+## Setup Logrotate 
+## First of all update repos
+sudo apt-get update
+## Install logrotated
+sudo apt-get install logrotate
+# edit /etc/logrotate.conf and update below variables. App info are set in /etc/logrotate.d/ files
+#rotation-interval, log-file-size, rotation-count and compression.
+## Example /etc/logrotate.d/dpkg
+/var/log/dpkg.log {
+	monthly
+	rotate 12
+	compress
+	delaycompress
+	missingok
+	notifempty
+	create 644 root root
+}
+# edit /etc/cron.daily/logrotate 
+# Manully can be run as /usr/sbin/logrotate /etc/logrotate.conf
+# Verify 
+cat /var/lib/logrotate/status 
