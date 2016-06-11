@@ -16,3 +16,7 @@ eBPF: http://lwn.net/Articles/603983/
 ktap: http://www.ktap.org  
 SystemTap: https://sourceware.org/systemtap/ 
 sysdig: http://www.sysdig.org  
+
+This is THE GOD LINK On Security
+https://www.ece.cmu.edu/~ganger/712.fall02/papers/p761-thompson.pdf 
+Read this paper written by Ken Thompson and you will get a different perspective on security.
