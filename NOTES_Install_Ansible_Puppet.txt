@@ -86,6 +86,12 @@ service puppetmaster start
 #### For latest versions, you still need to get the DEB/YUM package and install it.. 
 #### ***** the documentation. 
 #### For ubuntu 14.0.4, the agent is already installed...
+# but if you need to do it, 
+wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
+sudo dpkg -i puppetlabs-release-trusty.deb
+sudo apt-get update
+sudo apt-get install puppet-agent
+
 ### Change /etc/puppet/puppet.conf 
 # Client install for Ubuntu 14.0.4
 apt-get install puppet 
@@ -99,6 +105,8 @@ apt-get install puppet
 server = demo1.sridemo.com
 #Restart client
 #service puppet start
+# to make this auto... 
+# enable in /etc/default/puppet (client) or /etc/default/puppetmaster (server) and set START to yes. 
 
 # Client install on RPM (specific to Centos)On
 rpm -ivh https://yum.puppetlabs.com/el/7/products/x86_64/puppetlabs-release-7-11.noarch.rpm
@@ -125,3 +133,24 @@ puppet apply apache_php.pp --verbose
 puppet apply 
 ## revoke a certificate...
 puppet cert clean desktop1.example.com
+
+# Set up tomcat on Puppet master
+puppet module list
+puppet module upgrade puppetlabs-stdlib
+puppet module install puppetlabs-apache
+puppet module install puppetlabs-tomcat 
+## See link on all of this.. https://forge.puppet.com/modules
+https://github.com/puppetlabs/puppetlabs-tomcat
+## https://docs.puppet.com/puppet/latest/reference/configuration.html
+##https://puppet.com/blog/which-logs-should-i-check-when-things-go-wrong
+
+Our WAR File is here: http://192.168.33.1:8080/jenkins/job/Deploy_Maven/lastSuccessfulBuild/artifact/gameoflife-web/target/gameoflife.war
+# Adapt as required.... 
+### Other commands....
+puppet agent --configprint runinterval
+puppet config print manifest --section master --environment <ENVIRONMENT>
+
+sudo sh -c 'echo "<?php  phpinfo(); ?>" > /etc/puppet/modules/apache/files/info.php'
+
+## INstall the LINT CODE>.. 
+gem install puppet-lint
