@@ -2,13 +2,14 @@
 ## Add repository
 sudo add-apt-repository ppa:saltstack/salt
 ## if above is not found, do this FIRST
-sudo apt-get install python-software-properties
-sudo apt-get install software-properties-common
+sudo apt-get install -y python-software-properties software-properties-common
+# if even this fail, try this first.. 
+sudo apt-get update --fix-missing 
 ## or manually do via
 echo deb http://ppa.launchpad.net/saltstack/salt/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/sources.list.d/saltstack.list
 wget -q -O- "http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4759FA960E27C0A6" | sudo apt-key add -
 ## finally update repository
-sudo apt-get update
+sudo apt-get update # DO NOT FORGET THIS STEP..... 
 ### Add packages as required...
 sudo apt-get install salt-api
 sudo apt-get install salt-cloud
@@ -17,6 +18,8 @@ sudo apt-get install salt-minion
 sudo apt-get install salt-ssh
 sudo apt-get install salt-syndic
 
+# To stop salt master 
+sudo service salt-master stop 
 ###Configuring Salt
 
 #Salt configuration is very simple. The default configuration for the master will work for most installations and the only requirement for setting up a minion is to set the location of the master in the minion configuration file.
@@ -106,4 +109,24 @@ salt-key -L
 salt '*' test.ping
 #Each of the Minions should send a True response as shown above.
 
+#### Example of using pre-built formulas
+# make directory
+mkdir -p /srv/formulas
+# clone existing formula here... 
+cd /srv/formulas
+git clone https://github.com/saltstack-formulas/apache-formula.git
+# edit /etc/salt/master and include /srv/formulas/apache-formulas in file_root
 
+# formulas can be included in state files..eg. 
+include:
+  - epel
+
+python26:
+  pkg.installed:
+    - require:
+      - pkg: epel
+# directly include in top.sls file... e.g.
+base:
+  'myopenstackmaster':
+    - apache
+### Additional links: https://github.com/saltstack-formula 
