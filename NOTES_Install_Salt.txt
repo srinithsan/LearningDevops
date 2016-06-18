@@ -1,0 +1,109 @@
+#### Install Salt On Ubuntu
+## Add repository
+sudo add-apt-repository ppa:saltstack/salt
+## if above is not found, do this FIRST
+sudo apt-get install python-software-properties
+sudo apt-get install software-properties-common
+## or manually do via
+echo deb http://ppa.launchpad.net/saltstack/salt/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/sources.list.d/saltstack.list
+wget -q -O- "http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4759FA960E27C0A6" | sudo apt-key add -
+## finally update repository
+sudo apt-get update
+### Add packages as required...
+sudo apt-get install salt-api
+sudo apt-get install salt-cloud
+sudo apt-get install salt-master
+sudo apt-get install salt-minion
+sudo apt-get install salt-ssh
+sudo apt-get install salt-syndic
+
+###Configuring Salt
+
+#Salt configuration is very simple. The default configuration for the master will work for most installations and the only requirement for setting up a minion is to set the location of the master in the minion configuration file.
+
+#The configuration files will be installed to /etc/salt and are named after the respective components, /etc/salt/master, and /etc/salt/minion.
+
+#Master Configuration
+
+#By default the Salt master listens on ports 4505 and 4506 on all interfaces (0.0.0.0). To bind Salt to a specific IP, redefine the "interface" directive in the master configuration file, typically /etc/salt/master, 
+
+#After updating the configuration file, restart the Salt master. See the master configuration reference for more details about other configurable options.
+Minion Configuration
+
+# minion Configuration
+#Although there are many Salt Minion configuration options, configuring a Salt Minion is very simple. By default a Salt Minion will try to connect to the DNS name "salt"; if the Minion is able to resolve that name correctly, no configuration is needed.
+
+#If the DNS name "salt" does not resolve to point to the correct location of the Master, redefine the "master" directive in the minion configuration file, typically /etc/salt/minion, as follows:
+
+- #master: salt
++ master: 10.0.0.1
+
+#After updating the configuration file, restart the Salt minion. See the minion configuration reference for more details about other configurable options.
+
+#Running Salt
+
+    #Start the master in the foreground (to daemonize the process, pass the -d flag):
+
+    salt-master
+
+    #Start the minion in the foreground (to daemonize the process, pass the -d flag):
+
+    #salt-minion
+
+#Having trouble?
+
+#The simplest way to troubleshoot Salt is to run the master and minion in the foreground with log level set to debug:
+
+salt-master --log-level=debug
+
+#Additionally, ownership, and permissions *** may *** need to be set such that the desired user can read from and write to the following directories (and their subdirectories, where applicable):
+
+    #/etc/salt
+    #/var/cache/salt
+    #/var/log/salt
+    #/var/run/salt
+
+#Key Identity
+
+#Salt provides commands to validate the identity of your Salt master and Salt minions before the initial key exchange. Validating key identity helps avoid inadvertently connecting to the wrong Salt master, and helps prevent a potential MiTM attack when establishing the initial connection.
+
+#Master Key Fingerprint
+
+#Print the master key fingerprint by running the following command on the Salt master:
+
+salt-key -F master
+
+#Copy the master.pub fingerprint from the Local Keys section, and then set this value as the master_finger in the minion configuration file. Save the configuration file and then restart the Salt minion.
+
+#Minion Key Fingerprint
+
+#Run the following command on each Salt minion to view the minion key fingerprint:
+
+salt-call --local key.finger
+
+#Compare this value to the value that is displayed when you run the salt-key --finger <MINION_ID> command on the Salt master.
+
+#Key Management
+
+#Salt uses AES encryption for all communication between the Master and the Minion. This ensures that the commands sent to the Minions cannot be tampered with, and that communication between Master and Minion is authenticated through trusted, accepted keys.
+
+#Before commands can be sent to a Minion, its key must be accepted on the Master. Run the salt-key command to list the keys known to the Salt Master:
+
+salt-key -L
+
+#To accept the keys and allow the Minions to be controlled by the Master, again use the salt-key command:
+
+salt-key -A
+salt-key -L
+# all keys should be accepted 
+
+#The salt-key command allows for signing keys individually or in bulk. The example above, using -A bulk-accepts all pending keys. To accept keys individually use the lowercase of the same option, -a keyname.
+
+#Sending Commands
+
+#Communication between the Master and a Minion may be verified by running the test.ping command:
+
+salt '*' test.ping
+#Each of the Minions should send a True response as shown above.
+
+
