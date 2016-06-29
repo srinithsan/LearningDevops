@@ -150,6 +150,7 @@ Our WAR File is here: http://192.168.33.1:8080/jenkins/job/Deploy_Maven/lastSucc
 puppet agent --configprint runinterval
 puppet config print manifest --section master --environment <ENVIRONMENT>
 
+#Generate a file via script..... 
 sudo sh -c 'echo "<?php  phpinfo(); ?>" > /etc/puppet/modules/apache/files/info.php'
 
 ## INstall the LINT CODE>.. 
