@@ -89,8 +89,8 @@ service puppetmaster start
 # but if you need to do it, 
 wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
 sudo dpkg -i puppetlabs-release-trusty.deb
-sudo apt-get update
-sudo apt-get install puppet-agent
+sudo apt-get update -y
+sudo apt-get install puppet -y 
 
 ### Change /etc/puppet/puppet.conf 
 # Client install for Ubuntu 14.0.4
@@ -145,13 +145,23 @@ https://github.com/puppetlabs/puppetlabs-tomcat
 ##https://puppet.com/blog/which-logs-should-i-check-when-things-go-wrong
 
 Our WAR File is here: http://192.168.33.1:8080/jenkins/job/Deploy_Maven/lastSuccessfulBuild/artifact/gameoflife-web/target/gameoflife.war
-# Adapt as required.... 
-### Other commands....
+
+http://192.168.1.109:8080/jenkins/job/DEMO_MAVEN/lastSuccessfulBuild/artifact/gameoflife-web/target/gameoflife.war
+
+# Adapt as required..
 puppet agent --configprint runinterval
 puppet config print manifest --section master --environment <ENVIRONMENT>
 
 #Generate a file via script..... 
-sudo sh -c 'echo "<?php  phpinfo(); ?>" > /etc/puppet/modules/apache/files/info.php'
+#sudo sh -c 'echo "<?php  phpinfo(); ?>" > /etc/puppet/modules/apache/files/info.php'
+sudo sh -c 'echo "<?php  phpinfo(); ?>" > /etc/puppet/files/info.php'
 
 ## INstall the LINT CODE>.. 
 gem install puppet-lint
+
+### ADditional commands of interest
+# Get Types: 
+	puppet describe <type>
+	puppet describe --list 
+	puppet status <server>
+	puppet resource --types 
