@@ -111,9 +111,11 @@ sudo service bind9 restart
 ## Configure DNS clients
 ## On Ubuntu
 sudo vi /etc/resolvconf/resolv.conf.d/head
+sudo vi/etc/resolv.conf 
 ## add below lines
 search sridemo.com  # your private domain
 nameserver 192.168.33.80  # ns1 private IP address
 ## onCentos
 sudo vi /etc/resolv.conf
 ## Use nslookup or dig fto test this...
+dig -tAXFR sridemo.com
