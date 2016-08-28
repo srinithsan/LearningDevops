@@ -111,6 +111,7 @@ sudo service bind9 restart
 ## Configure DNS clients
 ## On Ubuntu
 sudo vi /etc/resolvconf/resolv.conf.d/head
+
 sudo vi/etc/resolv.conf 
 ## add below lines
 search sridemo.com  # your private domain

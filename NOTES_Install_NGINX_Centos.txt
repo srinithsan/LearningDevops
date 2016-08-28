@@ -3,9 +3,8 @@ sudo yum install epel-release
 #install NGINX
 sudo yum install nginx
 # Start NGINX
-sudo systemctl start nginx
-# Before doing so, edit the port so that it does not clash with Apache
-# IF running a firewall, 
+sudo systemctl start nginx (ONLY ON CENTOS 7) 
+# On CENTOS 6, use service nginx start 
 #  sudo firewall-cmd --permanent --zone=public --add-service=http 
 #  sudo firewall-cmd --permanent --zone=public --add-service=https
 #  sudo firewall-cmd --reload
