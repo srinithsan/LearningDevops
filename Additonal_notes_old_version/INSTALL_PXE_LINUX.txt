@@ -1,4 +1,3 @@
-### use the following as a big source on devops.....
 http://www.jedi.be/blog/
 *** PXE Server Setup
 	Setup Centos with DHCP already setup
@@ -9,23 +8,20 @@ http://www.jedi.be/blog/
 	Restart xinetd	
 		service xinetd restart
 **** Set up Boot Images
-### how you organize the folders is upto you..:-). 
 	mkdir -p /tftpboot/images/centos/i386/3.0
 	mkdir -p /tftpboot/images/centos/i386/3.1
 	mkdir -p /tftpboot/images/centos/x86_64/3.0
 	mkdir -p /tftpboot/images/centos/x86_64/3.1
-
 	mkdir -p /tftpboot/images/centos/i386/4.0
 	mkdir -p /tftpboot/images/centos/i386/4.1
 	mkdir -p /tftpboot/images/centos/x86_64/4.0
 	mkdir -p /tftpboot/images/centos/x86_64/4.1
-
 	mkdir -p /tftpboot/images/centos/i386/5.0
 	mkdir -p /tftpboot/images/centos/i386/5.1
 	mkdir -p /tftpboot/images/centos/x86_64/5.0
 	mkdir -p /tftpboot/images/centos/x86_64/5.1
 
-For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/ on "disc 1" of that $RELEASE/$ARCH to /tftpboot/images/centos/$ARCH/$RELEASE. 
+For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/ on "disc 1" of that $RELEASE/$ARCH to /tftpboot/images/centos/$ARCH/$RELEASE. The Xen boot files are in /images/xen.
 
 *** Configure DHCP
 	Edit /etc/dhcpd.conf
@@ -33,8 +29,8 @@ For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/
 	allow bootp;
 	option option-128 code 128 = string;
 	option option-129 code 129 = text;
-	next-server xxx.xxx.xxx.xxx; # TFTP Server ip addres...  
-	filename "/pxelinux.0"; #/tftpboot/pxelinux.0 
+	next-server xxx.xxx.xxx.xxx; 
+	filename "/pxelinux.0";
 *** REstart DHCP	
 	service dhcpd restart
 *** Install sysLinux
@@ -47,10 +43,10 @@ For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/
 	cp /usr/lib/syslinux/chain.c32 /tftpboot
 **** Create Directory for menus
 	mkdir /tftpboot/pxelinux.cfg
-*** edit pxelinux.cfg/default and add. Adapt as necessary. See syslinux man pages on how to setup menu of menus..
-	DEFAULT CENTOS53
-	PROMPT 0
-	LABEL CENTOS53
+*** edit pxelinux.cfg/default and add
+	DEFAULT Centos53
+	PROMPT 100 
+	LABEL CENTOS 53
 	KERNEL images/centos/5.3/i386/vmlinuz
 	APPEND initrd=images/centos/5.3/i386/initrd.img ip=10.100.2.34 ks=http://10.10.100.200/x.cfg 
 	LABEL UBUNTU

@@ -1,0 +1,60 @@
+****** Setting up rsyslog
+## on Centos
+yum -y install rsyslog
+## on Ubuntu
+apt-get install rsyslog -y 
+##edit /etc/rsyslog.conf
+# Uncomment both lins
+$ModLoad imtcp
+$InputTCPServerRun 514
+# Allow firewall
+## on Centos 7
+firewall-cmd --permanent --add-port 514/tcp
+firewall-cmd --reload
+## on Centos 6
+iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 514 -j ACCEPT
+service iptables save
+## On Ubuntu
+ufw allow 514/tcp
+## Configure client to send to remote server
+# Edit... /etc/rsyslog.d/loghost.conf
+*.* @@loghost:514 # replace loghost with IP of logging server
+## restart rsyslog
+service rsyslog restart
+## searching
+grep node1 /var/log/messages
+grep node[1|2] /var/log/messages 
+### Examples of rsyslog
+# Example 1
+$template TraditionalFormat,"%timegenerated% %HOSTNAME%
+%syslogtag%%msg:::drop-last-lf%\n"
+# Example 2
+$template precise,"%syslogpriority%,%syslogfacility%,%timegenerated%,%HOSTNAME%,
+%syslogtag%,%msg%\n"
+# Example 3
+$template RFC3164fmt,"<%PRI%>%TIMESTAMP% %HOSTNAME% %syslogtag%%msg%"
+# Example 4 writing to DB
+$template MySQLInsert,"insert iut, message, receivedat values
+('%iut%', '%msg:::UPPERCASE%', '%timegenerated:::date-mysql%')
+into systemevents\r\n", SQL
+# Example 5
+# Store critical stuff in critical
+#
+*.=crit;kern.none /var/adm/nonkernelcritical
+# Example 6
+# Kernel messages are first, stored in the kernel
+# file, critical messages and higher ones also go
+# to another host and to the console. Messages to
+# the host logger are forwarded in RFC 3164
+# format (using the template defined above).
+#
+kern.* /var/adm/kernel
+kern.crit @logger;RFC3164fmt
+kern.crit /dev/console
+kern.info;kern.!err /var/adm/kernel-info
+#Example 7 
+# The tcp wrapper loggs with mail.info, we display
+# all the connections on tty12
+#
+mail.=info /dev/tty12
+See: http://www.rsyslog.com/doc/rsyslog_conf_examples.html 

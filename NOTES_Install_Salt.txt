@@ -11,12 +11,12 @@ wget -q -O- "http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4759FA
 ## finally update repository
 sudo apt-get update # DO NOT FORGET THIS STEP..... 
 ### Add packages as required...
-sudo apt-get install salt-api
-sudo apt-get install salt-cloud
-sudo apt-get install salt-master
-sudo apt-get install salt-minion
-sudo apt-get install salt-ssh
-sudo apt-get install salt-syndic
+sudo apt-get -y install salt-api
+sudo apt-get -y install salt-cloud
+sudo apt-get -y install salt-master
+sudo apt-get -y install salt-minion
+sudo apt-get -y install salt-ssh
+sudo apt-get -y install salt-syndic
 
 # To stop salt master 
 sudo service salt-master stop 
@@ -130,3 +130,7 @@ base:
   'myopenstackmaster':
     - apache
 ### Additional links: https://github.com/saltstack-formula 
+
+salt-call [options]
+salt '*' state.highstate 	
+https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html

@@ -1,0 +1,16 @@
+**** Install Subversion
+use this link
+For windows users download subversion edge from Collabnet
+just double click installer. 
+*** Advanced: YOu can manually install each HTTP module in an existing Apache server
+              just prepare for 1 day install.
+**** git setup
+     see PPT on same
+*** setup ssh keys
+	ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+   # Creates a new ssh key, using the provided email as a label
+
+   # start the ssh-agent in the background
+eval "$(ssh-agent -s)"
+Agent pid 59566
+ssh-add ~/.ssh/id_rsa

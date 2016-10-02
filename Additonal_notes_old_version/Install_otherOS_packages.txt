@@ -1,0 +1,16 @@
+*** Installing RPM packages in Ubuntu
+** install Alien
+sudo apt-get install alien dpkg-dev debhelper build-essential
+** convert package to debian format
+sudo alien packagename.rpm
+** install package
+sudo dpkg -i packagename.deb
+*** Installing Dpkg in Centos
+** Download the latest epel-release rpm from http://dl.fedoraproject.org/pub/epel/6/i386/
+** Install epel-release rpm:
+rpm -Uvh epel-release*rpm
+** Install dpkg rpm package:
+yum install dpkg
+** install Alien
+yum install alien
+** Use alien to do the conversion

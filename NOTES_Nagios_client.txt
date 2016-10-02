@@ -26,10 +26,10 @@ Make sure that the Firewall on the local machine will allow the NRPE daemon to b
  iptables -A INPUT -p tcp -m tcp --dport 5666 -j ACCEPT
  service iptables save
 # Notes on Firewall on Centos: You cannot have both firewalld and iptables run at same time. So you need to stop firewalld and enable iptables
-systemctl stop firewalld
-systemctl mask firewalld
-yum install iptables-services
-systemctl enable iptables
+sudo systemctl stop firewalld
+sudo systemctl mask firewalld
+sudo yum install iptables-services
+sudo systemctl enable iptables
 systemctl [stop|start|restart] iptables
 service iptables save
 /usr/libexec/iptables/iptables.init save
@@ -39,9 +39,9 @@ service iptables save
 
 Verify using the local commands: 
 
-/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_users
+	
 /usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_load
-/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_hda1
+#/usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_hda1
 /usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_total_procs
 /usr/local/nagios/libexec/check_nrpe -H 127.0.0.1 -c check_zombie_procs
 

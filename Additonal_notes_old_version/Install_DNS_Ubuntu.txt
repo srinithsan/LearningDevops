@@ -1,6 +1,4 @@
-## Problem statement: We wil 
-# Install DNS on demo1 (192.168.33.86)
-# Make sure BIND is at least at version 9.5+. This check is not included in code...
+# Install DNS on demo1 (192.168.33.80)
 sudo apt-get install bind9 bind9utils bind9-doc dnsutils -y 
 # Add support for IPV4 
 sudo vi /etc/default/bind9
@@ -8,7 +6,7 @@ sudo vi /etc/default/bind9
 # OPTIONS="-4 -u bind"
 
 # Add ACL
-# oN windows, edit the file named.conf.options with notepad, on linux with vi/vim
+# oN windows, edit the file with notepad, on linux with vi/vim
 sudo vim named.conf.options
 # ADd this line: 
 acl "trusted" {
@@ -24,27 +22,27 @@ options {
         directory "/var/cache/bind";
 
         recursion yes;                 # enables resursive queries
-        allow-recursion { any; };  # allows recursive queries from "trusted" clients, this is bad. make sure it it is restricted...
+        allow-recursion { any; };  # allows recursive queries from "trusted" clients
         listen-on { any; };  # ns1 private IP address - listen on private network only
         allow-transfer { any; };      # disable zone transfers by default
 
-        forwarders {				   # Where should queries be forwarded?? Add your own ISP Server DNS server and make sure it can be reached
+        forwarders {				   # Where should queries be forwarded??
                 8.8.8.8;
                 8.8.4.4;
         };
 ...
 };
 
-# Restart bind, Bind is UNIX implementation of DNS. 
+# Restart bind
 sudo /etc/init.d/bind9 start
 # Check configuration... Verify....
 dig @127.0.0.1 ubuntu.com 
 
-##### Edit Local File...ok
-sudo vi /etc/bind/named.conf.local, Add following lines... Adapt for your own code.. 
+##### Edit Local File...
+sudo vim /etc/bind/named.conf.local
 zone "sridemo.com" {
         type master;
-        file "/etc/bind/zones/db.sridemo.com";
+        file "/etc/bind/db.sridemo.com";
 		#allow-transfer { 192.168.33.84; };         # ns2  secondary Name Server
         };
 zone "168.192.in-addr.arpa" {
@@ -111,12 +109,9 @@ sudo service bind9 restart
 ## Configure DNS clients
 ## On Ubuntu
 sudo vi /etc/resolvconf/resolv.conf.d/head
-
-sudo vi/etc/resolv.conf 
 ## add below lines
 search sridemo.com  # your private domain
 nameserver 192.168.33.80  # ns1 private IP address
 ## onCentos
 sudo vi /etc/resolv.conf
-## Use nslookup or dig fto test this...
-dig -tAXFR sridemo.com
+## Use nslookup to test this...

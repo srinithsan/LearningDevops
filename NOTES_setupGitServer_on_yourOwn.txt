@@ -1,5 +1,5 @@
 #***** SETUP YOUR OWN GIT SERVER
-#*** Install GIT, we assume it is 192.168.33.80
+#*** Install GIT, we assume it is 192.168.33.91
 sudo apt-get install git-core
 # Setup GIT User
 sudo adduser git
@@ -11,7 +11,7 @@ touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys
 # Create a private/Public key locally 
 ssh-keygen -t rsa -b 4096 "your email id"
 # Copy this file over to server
-scp vagrant@192.168.33.80:/tmp/id_rsa.pub
+scp vagrant@192.168.33.91:/tmp/id_rsa.pub
 # on server, append it back to gIT user's authorized key
 su git 
 cd 
@@ -21,6 +21,8 @@ cat /tmp/id_rsa.pub >> ./.ssh/authorized_keys
 mkdir -p /opt/git/starter.git
 cd /opt/git/starter.git 
 git init --bare 
+# This directory should be writable by gituser...
+. 
 # On local machine 
 # initialize git
 mkdir -p /home/git/starter
@@ -29,7 +31,7 @@ git init
 # Optionally add files.. 
 # git add .; git commit -m "Some comment"
 # set origin to remote server. 
-git remote add origin ssh://git@192.168.33.80:/opt/git/starter.git
+git remote add origin ssh://git@192.168.33.91:/opt/git/starter.git
 git push origin master 
 # At this point, everyone can start using this repos... 
 

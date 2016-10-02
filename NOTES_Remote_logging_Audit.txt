@@ -17,7 +17,7 @@ cat /etc/rsyslog.conf | sed 's/#$\(ModLoad\)/$\1/g;s/#$\(UDPServerRun\)/$\1/g;s/
 cat /tmp/x.txt  > /etc/rsyslog.conf
 rm /tmp/x.txt
 #    restart rsyslogd
-sudo service rsyslog restart
+sudo service :rsyslog restart
 
 # Setup Remote Logging on Ubuntu 14.04 Client version 
 # adapt as per your version. DO NOT ASK ME FOR VERSION DIFFERENCE

@@ -1,22 +1,15 @@
-#### Problem Statement installing Nagios 4.1 on Centos 7 
-## Step #1: Install LAMP
-	yum install httpd -y
-	systemctl start httpd
-	systemctl enable httpd
-	yum -y install mariadb-server mariadb
-	systemctl start mariadb
-	systemctl enable mariadb
-	systemctl status mariadb
-	mysql
-	mysql_secure_installation
-	yum install php php-mysql php-gd php-pear -y
-## Install dependencies for Nagios
-	sudo yum install -y gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip wget
-#Create user and group 
+SSH
+	ssh-keygen
+		ssh-keygen -t rsa -f ~/.ssh/id_dsa -C "you@example.com"
+	ssh-agent
+
+Nagios
+	sudo yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
+	#Create user and group 
 	sudo useradd nagios
 	sudo groupadd nagcmd
 	sudo usermod -a -G nagcmd nagios
-# download Core nagios source and build it from source
+	# download Core nagios 
 	cd ~
 	curl -L -O https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.1.1.tar.gz
 	tar xvf nagios-*.tar.gz
@@ -29,7 +22,7 @@
 	sudo make install-config
 	sudo make install-webconf
 	sudo usermod -G nagcmd apache
-# Download and install plugins from Source
+	# Download and install plugins 
 	cd ~
 	curl -L -O http://nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz
 	tar xvf nagios-plugins-*.tar.gz
@@ -37,7 +30,7 @@
 	./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
 	make
 	sudo make install
-# Install NRPE and build from source
+	# Install NRPE 
 	cd ~
 	curl -L -O http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
 	tar xvf nrpe-*.tar.gz
@@ -48,27 +41,24 @@
 	sudo make install-xinetd
 	sudo make install-daemon-config
 	sudo vi /etc/xinetd.d/nrpe
-# in file /etc/xinetd.d/nrpe, change line to allow which hosts can connect via NRPE
-	#only_from = 127.0.0.1 192.168.33.0/24
-		sudo service xinetd restart
+	only_from = 127.0.0.1 10.132.224.168
+	sudo service xinetd restart
 	sudo vi /usr/local/nagios/etc/nagios.cfg
-	#cfg_dir=/usr/local/nagios/etc/servers # Uncomment
-	sudo mkdir -p /usr/local/nagios/etc/servers
-	sudo vi /usr/local/nagios/etc/objects/contacts.cfg #change admin email to send notifications
+	#cfg_dir=/usr/local/nagios/etc/server # Uncomment
+	sudo mkdir /usr/local/nagios/etc/servers
+	sudo vi /usr/local/nagios/etc/objects/contacts.cfg
 	sudo vi /usr/local/nagios/etc/objects/commands.cfg
-	#sudo /etc/nagios/commands.cfg
-	# Add following line: Remove the leading # in lines 
-	#define command{
-        #command_name check_nrpe
-        #command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
-	#}
+
+	define command{
+        command_name check_nrpe
+        command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
+}
 
 sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
 sudo systemctl start nagios.service
-sudo systemctl restart httpd.service
-# Enable nagios to run in multi user mode and on bootup 
+sudo systemctl restart httpd.serviceh
+
 sudo chkconfig nagios on
-# Grant permissions to run the web app for Nagios
 sudo vi /etc/httpd/conf.d/nagios.conf
 Order allow,deny
 Allow from all

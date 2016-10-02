@@ -1,5 +1,4 @@
-#Make sure that DNS and hostname is set up first... 
-************ Installing the Chef Server 11/12
+************ Installing the Chef Server
 ** alias Chef
 ** Download the appropriate package
 ** Installing	
@@ -7,15 +6,8 @@
 	rpm -Uvh /tmp/chef-server-core-<version>.rpm
 	** oN Ubuntu
 	dpkg -i /tmp/chef-server-core-<version>.deb
-	
-	https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_12.8.0-1_ppc64el.debd
-	
-	wget -O chef-server-11.deb https://packages.chef.io/stable/ubuntu/12.04/chef-server_11.1.7-1_amd64.deb
-	sudo dpkg -i chef-server-11.deb
-	sudo apt-get update 
 ** configure the same and restart it..
-	sudo chef-server-ctl reconfigure # ABSOLUTELY THE FIRST STEP 
-	https://ip_chef_servers # admin, chef-validator admin.pem/chef-validator.pem
+	chef-server-ctl reconfigure
 
 *** CHEF 12 SPECIFIC 
 ** create user
@@ -37,25 +29,19 @@
 	chef-server-ctl reconfigure
 	opscode-reporting-ctl reconfigure
 
-####Install Client
+Install Client
 curl -L https://www.chef.io/chef/install.sh | sudo bash
 
-###Alternatively
+Alternatively
 knife bootstrap node_domain_or_IP -x username -P password -N name_for_node --sudo
 
-#e.g
-#knife bootstrap 192.168.33.90 -x vagrant -P vagrant -N CHEF_CLIENT1 --sudo 
 
-knife bootstrap test06.sridemo.com -x vagrant -P vagrant -N test06.sridemo.com --sudo 
+knife bootstrap 192.168.33.81 -x vagrant -P vagrant -N CHEF_CLIENT --sudo 
 
-# Some key Locations
-#C:/chef/chef-repo/.chef
-## initial knife command
-knife configure --initial 
-# editing a JSON for a node 
+C:/chef/chef-repo/.chef
+
 knife node edit node1 -a
 
-knife node edit CHEF_CLIENT -a 
 ## sample:
 {
    "normal": {
@@ -76,29 +62,4 @@ knife node edit CHEF_CLIENT -a
    "chef_type": "node"
 }
 
-# Uploading a cookbook
-knife cookbook upload /cookbooks/httpd
-## https://docs.chef.io/knife_cookbook.html
-
-# Create a repos
-git clone https://github.com/chef/chef-repo (or)
-chef generate repo 
-
-# Someadditional JSON Exampless
-{
-  "chef_environment": "pre-production"
-}
-
-https://docs.chef.io/ctl_chef_client.html
-https://github.com/bsharitt/tomcat8
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[tomcat8]"
-  ]
-}
-
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted 
-
-
-chef-server-ctl uninstall
+knife upload /cookbooks/httpd

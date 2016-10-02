@@ -1,0 +1,30 @@
+Demo Session: Ansible
+	Install Ansible on demo1.sridemo.com (192.168.33.80)
+	Set up as per INSTALL_ANSIBLE_PUPPET.TXT
+	Show demo
+Demo Session: pUPpEt
+	Install Puppet Master on demo1.sridemo.com (192.168.33.80)
+	Install Puppet Client on proxy (192.168.33.82)
+	Set up as per INSTALL_ANSIBLE_PUPPET.TXT
+	#From the LAMP stack tutorial, we know that we want an Ubuntu 14.04 server with the following resources:
+    Apache package (apache2) installed
+    Apache service (apache2) running
+    MySQL Server package (mysql-server) installed
+    MySQL Server service (mysql) running
+    PHP5 package (php5) installed
+    A test PHP script file (info.php)
+    Update apt before installing packages
+
+# Standalone client	
+sudo vi /etc/puppet/manifests/lamp.pp
+sudo puppet apply --test
+# to do on a master
+cd /etc/puppet/modules
+sudo mkdir -p lamp/manifests
+sudo vi lamp/manifests/init.pp
+sudo vi /etc/puppet/manifests/site.pp
+# Rather than do all of this, use pre-installed modules.. 
+sudo puppet module install puppetlabs-apache
+sudo puppet module install puppetlabs-mysql
+sudo vi /etc/puppet/manifests/site.pp # for all of this use site2.pp
+#sudo sh -c 'echo "<?php  phpinfo(); ?>" > /etc/puppet/modules/apache/files/info.php'

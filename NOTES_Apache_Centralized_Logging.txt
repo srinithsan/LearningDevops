@@ -1,0 +1,30 @@
+**** Apache log
+	
+$ModLoad imfile
+$InputFilePollInterval 10 
+$PrivDropToGroup adm
+$WorkDirectory /var/spool/rsyslog
+ 
+# Apache access file:
+$InputFileName /var/log/apache2/access.log
+$InputFileTag apache-access:
+$InputFileStateFile stat-apache-access
+$InputFileSeverity info
+$InputFilePersistStateInterval 20000
+$InputRunFileMonitor
+ 
+#Apache Error file: 
+$InputFileName /var/log/apache2/error.log
+$InputFileTag apache-error:
+$InputFileStateFile stat-apache-error
+$InputFileSeverity error
+$InputFilePersistStateInterval 20000
+$InputRunFileMonitor
+
+*** Alternatively
+ErrorLog  "|/usr/bin/tee -a /var/log/www/error.log  | /usr/bin/logger -thttpd -plocal6.err"
+CustomLog "|/usr/bin/tee -a /var/log/www/access.log | /usr/bin/logger -thttpd -plocal6.notice" extended_ncsa
+
+*** Filterng
+if $msg contains ' 500 ' and $programname == 'apache2-access' then @@
+if $msg contains ' 502 ' and $programname == 'apache2-access' then @@

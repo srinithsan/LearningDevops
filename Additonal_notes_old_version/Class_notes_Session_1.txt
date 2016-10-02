@@ -1,0 +1,72 @@
+#how to set up using VBOX and Vagrant
+vagrant init ubuntu/trusty64; vagrant up --provider virtualbox
+#understanding routing tables
+http://manpages.ubuntu.com/manpages/trusty/man8/route.8.html
+
+****** Router
+A device that forwards data packets along networks. A router is connected to at least two networks, commonly two LANs or WANs or a LAN and its ISP.s network. Routers are located at gateways, the places where two or more networks connect. Routers use headers and forwarding tables to determine the best path for forwarding the packets, and they use protocols such as ICMP to communicate with each other and configure the best route between any two hosts.
+
+******** Switch
+In networks, a device that filters and forwards packets between LAN segments. Switches operate at the data link layer (layer 2) and sometimes the network layer (layer 3) of the OSI Reference Model and therefore support any packet protocol. LANs that use switches to join segments are called switched LANs or, in the case of Ethernet networks, switched Ethernet LANs.
+
+********* Hub
+A common connection point for devices in a network. Hubs are commonly used to connect segments of a LAN. A hub contains multiple ports. When a packet arrives at one port, it is copied to the other ports so that all segments of the LAN can see all packets.
+
+******** LAN segment
+A section of a local area network that is used by a particular workgroup or department and separated from the rest of the LAN by a bridge, router or switch. Networks are divided into multiple segments for security and to improve traffic flow by filtering out packets that are not destined for the segment.
+
+
+******* SUBNET mask The technique used by the IP protocol to create a subnet address. The subnet mask is a binary pattern that is stored in the client machine, server or router. It is matched with the IP address of a packet to determine which network segment the packet is destined for. See subnet.
+
+******* A Tradeoff Between Hosts and Subnets
+Depending on the network class (A, B or C), some number of bits are reserved for hosts and subnets, and these bits become a tradeoff. The more hosts, the fewer the subnets can be created; the more subnets, the fewer the hosts can be individually addressed.
+
+***** Example
+
+Class A: 255.0.0.0
+Class B: 255.255.0.0
+Class C: 255.255.255.0
+
+8.20.15.1 = 00001000.00010100.00001111.00000001
+255.0.0.0 = 11111111.00000000.00000000.00000000
+            -----------------------------------
+             net id |      host id             
+
+netid =  00001000 = 8
+hostid = 00010100.00001111.00000001 = 20.15.1
+
+DeviceA: 172.16.17.30/20
+DeviceB: 172.16.28.15/20
+
+Determine the Subnet for DeviceA:
+172.16.17.30  -   10101100.00010000.00010001.00011110
+255.255.240.0 -   11111111.11111111.11110000.00000000
+                  -----------------| sub|------------
+subnet =          10101100.00010000.00010000.00000000 = 172.16.16.0
+
+Determine the Subnet for DeviceB:
+172.16.28.15  -   10101100.00010000.00011100.00001111
+255.255.240.0 -   11111111.11111111.11110000.00000000
+                  -----------------| sub|------------
+subnet =          10101100.00010000.00010000.00000000 = 172.16.16.0
+
+***** Examples: 
+ Example #1
+ Class C Default Mask (No Subnets)
+ 255.255.255.0
+ 11111111.11111111.11111111.00000000 (how many hosts? 2power 8-1 -1 = 254) 
+ Example #2
+ Class C Mask for Six Subnets
+ 255.255.255.224
+ 11111111.11111111.11111111.11100000
+ 
+ In Example #2 above, the 224 reserves the three high-order bits of that field for subnets (sss), leaving the remaining five bits for hosts (hhhhh). The 224 creates six subnets from 001 to 110 (000 and 111 are reserved), and each subnet can have 30 hosts from 00001 to 11110. Likewise, 00000 and 11111 are reserved: all 0's mean "this" node, and all 1's mean "all" nodes (see broadcast address). This is why calculations for maximum hosts and subnets are always minus 2. 
+
+This address is called the IP address (Internet Protocol address). This 32-bit IP address has two parts: one part identifies the network (with the network number) and the other part identifies the specific machine or host within the network (with the host number).  
+
+Effectively, the IP address then contains three parts: the network number, the subnet number, and the machine number.
+
+
+Once a packet has arrived at an organization's gateway or connection point with its unique network number, it can be routed within the organization's internal gateways using the subnet number. The router knows which bits to look at (and which not to look at) by looking at a subnet mask, which is a screen of numbers that tells you which numbers to look at underneath. In a binary mask, a "1" over a number says "Look at the number underneath"; a "0" says "Don't look." Using a mask saves the router having to handle the entire 32 bit address; it can simply look at the bits selected by the mask.
+
+`

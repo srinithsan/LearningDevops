@@ -1,0 +1,83 @@
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+yum -y install nagios nagios-plugins-all nagios-plugins-nrpe nrpe php httpd
+chkconfig httpd on && chkconfig nagios on
+service httpd start && service nagios start
+
+/etc/nagios
+dd if=/dev/zero of=/swap bs=1024 count=2097152
+mkswap /swap && chown root. /swap && chmod 0600 /swap && swapon /swap
+echo /swap swap swap defaults 0 0 >> /etc/fstab
+echo vm.swappiness = 0 >> /etc/sysctl.conf && sysctl -p
+
+htpasswd -c /etc/nagios/passwd nagiosadmin
+
+## for clients.... 
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+yum -y install nagios nagios-plugins-all nrpe
+chkconfig nrpe on
+
+/etc/nagios/nrpe.cfg
+log_facility=daemon
+pid_file=/var/run/nrpe/nrpe.pid
+server_port=5666
+nrpe_user=nrpe
+nrpe_group=nrpe
+allowed_hosts=198.211.117.251
+dont_blame_nrpe=1
+debug=0
+command_timeout=60
+connection_timeout=300
+include_dir=/etc/nrpe.d/
+command[check_users]=/usr/lib64/nagios/plugins/check_users -w 5 -c 10
+command[check_load]=/usr/lib64/nagios/plugins/check_load -w 15,10,5 -c 30,25,20
+command[check_disk]=/usr/lib64/nagios/plugins/check_disk -w 20% -c 10% -p /dev/vda
+command[check_zombie_procs]=/usr/lib64/nagios/plugins/check_procs -w 5 -c 10 -s Z
+command[check_total_procs]=/usr/lib64/nagios/plugins/check_procs -w 150 -c 200
+command[check_procs]=/usr/lib64/nagios/plugins/check_procs -w $ARG1$ -c $ARG2$ -s $ARG3$
+
+iptables -N NRPE
+iptables -I INPUT -s 0/0 -p tcp --dport 5666 -j NRPE
+iptables -I NRPE -s 198.211.117.251 -j ACCEPT
+iptables -A NRPE -s 0/0 -j DROP
+/etc/init.d/iptables save
+
+# on Server... 
+echo "cfg_dir=/etc/nagios/servers" >> /etc/nagios/nagios.cfg
+cd /etc/nagios/servers
+touch cloudmail.tk.cfg
+touch emailocean.tk.cfg
+
+nano /etc/nagios/servers/cloudmail.tk.cfg
+define host {
+        use                     linux-server
+        host_name               cloudmail.tk
+        alias                   cloudmail.tk
+        address                 198.211.107.218
+        }
+
+define service {
+        use                             generic-service
+        host_name                       cloudmail.tk
+        service_description             PING
+        check_command                   check_ping!100.0,20%!500.0,60%
+        }
+
+define service {
+        use                             generic-service
+        host_name                       cloudmail.tk
+        service_description             SSH
+        check_command                   check_ssh
+        notifications_enabled           0
+        }
+
+define service {
+        use                             generic-service
+        host_name                       cloudmail.tk
+        service_description             Current Load
+        check_command                   check_local_load!5.0,4.0,3.0!10.0,6.0,4.0
+        }
+		
+chown -R nagios. /etc/nagios
+service nagios restart

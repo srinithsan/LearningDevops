@@ -1,0 +1,98 @@
+###### Install SALT On Ubuntu
+sudo add-apt-repository ppa:saltstack/salt
+sudo apt-get update
+sudo apt-get install salt-master salt-minion salt-ssh salt-cloud salt-doc
+sudo mkdir -p /srv/{salt,pillar}
+sudo mkdir -p /srv/salt/formulas 
+sudo nano /etc/salt/master
+sudo salt-key -F master
+sudo nano /etc/salt/minion
+master: ip_of_salt_master
+master_finger: '7b:97:23:4b:a4:6d:16:31:2d:c9:e3:81:e2:d5:32:92'
+sudo salt-call key.finger --local
+# on master
+sudo salt-key --list all
+sudo salt-key -a saltminion
+sudo salt '*' test.ping
+salt 'chef.sridemo.com' pkg.install nginx
+salt 'chef.sridemo.com' service.start nginx
+
+https://github.com/saltstack-formulas
+https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html#tutorial-gitfs
+
+apt-get install python-pygit2
+apt-get install python-git
+apt-get install python-dulwich
+
+## Clearing cache
+salt-run fileserver.clear_cache backend=git
+## clearin cache for older versions..
+rm -rf /var/cache/salt/master{,/file_lists}/gitfs
+
+
+https://github.com/saltstack-formulas/tomcat-formula
+
+
+
+mkdir -p /srv/formulas
+cd /srv/formulas
+git clone https://github.com/saltstack-formulas/tomcat-formula.git
+
+# or
+
+mkdir -p /srv/formulas
+cd /srv/formulas
+wget https://github.com/saltstack-formulas/tomcat-formula/archive/master.tar.gz
+tar xf apache-formula-master.tar.gz
+##Add file_roots
+file_roots:
+  base:
+    - /srv/salt
+    - /srv/formulas/tomcat-formula
+	
+##top.sls
+base:
+  'myopenstackmaster':
+    - openstack
+
+## server or client install
+# add repos
+sudo add-apt-repository ppa:saltstack/salt
+# uprade and add 
+    sudo apt-get update
+    sudo apt-get install salt-master salt-minion salt-ssh salt-cloud salt-doc
+	# only for server
+	    sudo apt-get update
+		sudo apt-get install salt-master salt-ssh salt-cloud salt-doc
+	# only for clienr
+	    sudo apt-get update
+    sudo apt-get install salt-minion salt-ssh salt-cloud salt-doc
+# not covering bootstrap..
+# config server..
+	sudo mkdir -p /srv/{salt,pillar}
+	sudo nano /etc/salt/master
+	# setup file_roots
+#Also setup pillar
+	pillar_roots:
+  base:
+    - /srv/pillar
+# Client setup
+sudo nano /etc/salt/minion
+# on master	
+	sudo salt-key --list all
+	sudo salt-call key.finger --local
+sudo salt-key -f saltmaster
+# test connection...
+sudo salt '*' test.ping
+
+# CLient
+	sudo nano /etc/salt/minion
+# edit above line to accept master
+master: ip_of_master
+master_finger: '7b:97:23:4b:a4:6d:16:31:2d:c9:e3:81:e2:d5:32:92'
+# on master
+sudo salt-key -f saltminion
+# to accept this
+sudo salt-key -a saltminion
+# test the samw
+sudo salt '*' test.ping
