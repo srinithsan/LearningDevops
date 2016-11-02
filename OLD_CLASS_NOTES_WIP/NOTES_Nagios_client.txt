@@ -75,9 +75,9 @@ register                        0                       ; DONT REGISTER THIS - I
 ## Default
 define host{
 use                             linux-box               ; Inherit default values from a template
-host_name                       democlient		        ; The name we're giving to this server
-alias                           Centos7              ; A longer name for the server
-address                         192.168.33.85            ; IP address of Remote Linux host
+host_name                 test03.edurekademo.com		        ; The name we're giving to this server
+alias                           ProdTomcat              ; A longer name for the server
+address                      192.168.33.88            ; IP address of Remote Linux host
 }
 
 ### services.cfg

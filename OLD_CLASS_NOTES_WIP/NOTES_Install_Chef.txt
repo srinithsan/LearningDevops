@@ -46,7 +46,7 @@ knife bootstrap node_domain_or_IP -x username -P password -N name_for_node --sud
 #e.g
 #knife bootstrap 192.168.33.90 -x vagrant -P vagrant -N CHEF_CLIENT1 --sudo 
 
-knife bootstrap test06.sridemo.com -x vagrant -P vagrant -N test06.sridemo.com --sudo 
+knife bootstrap test05.edurekademo.com -x vagrant -P vagrant -N test05.edurekademo.com --sudo 
 
 # Some key Locations
 #C:/chef/chef-repo/.chef

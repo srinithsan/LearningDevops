@@ -48,8 +48,7 @@ sysctl fs.file-nr
 sysctl -w fs.file-max="32768"
 
 #set tcp_fin_timeout
-net.ipv4.tcp_fin_timeout
-netstat -nt
+net.ipv4.tcp_fin_timeoutnetstat -nt
 #In Unix, half-open connections are placed in the incomplete (or backlog) connections queue, and under Linux, the amount of space available in this queue is specified by ipv4.tcp_max_syn_backlog. It's important to realize that each half-open connection consumes memory. Also, realize that a common Denial of Service attack, the syn-flood attack, is based on the knowledge that your server will no longer be able to serve new connection requests if an attacker opens enough half-open connections. If you are running a site that does need to handle a large number of half-open connections, then consider increasing this value:
 # sysctl -w net.ipv4.tcp_max_syn_backlog="1024"
 net.ipv4.tcp_max_syn_backlog = 1024
@@ -206,5 +205,8 @@ sudo head -2 /etc/sysconfig/iptables
 #system-config-firewall 
 iptables --flush #delete all rules temporarily
 service iptables save
+
+/etc/sysconfig/iptables-config
+
 ## NMAP For port scanning... 
 rpm -vhU https://nmap.org/dist/nmap-7.12-1.x86_64.rpm
