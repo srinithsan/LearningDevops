@@ -40,3 +40,9 @@ CDNSKEY and CDS - For a child zone requesting updates to DS record(s) in the par
 	  http://www.networkworld.com/article/3137456/security/gartner-despite-the-ddos-attacks-don-t-give-up-on-dyn-or-dns-service-providers.html
 
 **** HA Proxy Documentation: http://cbonte.github.io/haproxy-dconv/ 
+
+**** Cool tools link
+http://rdns6.com/hostRecord
+https://www.sixxs.net/faq/dns/?faq=reverse
+http://www.subnet-calculator.com/
+https://www.tutorialspoint.com/ipv4/ipv4_subnetting.htm
