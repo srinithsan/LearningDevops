@@ -12,12 +12,8 @@ sudo vi /etc/default/bind9
 sudo vim named.conf.options
 # ADd this line: 
 acl "trusted" {
-        192.168.33.80;    # ns1 - can be set to localhost
-        #10.128.20.12;    # ns2
-        192.168.33.81;  # host1
-        192.168.33.82;  # host2
-		192.168.33.83;  # host3
-		192.168.56.1;   # Our windows host also :-)
+        192.168.33.86;    # ns1 - can be set to localhost
+
 };
 #Below the directory directive, add the highlighted configuration lines (and substitute in the proper ns1 IP address) so it looks something like this:
 options {
@@ -42,9 +38,9 @@ dig @127.0.0.1 ubuntu.com
 
 ##### Edit Local File...ok
 sudo vi /etc/bind/named.conf.local, Add following lines... Adapt for your own code.. 
-zone "sridemo.com" {
+zone "edurekademo.com" {
         type master;
-        file "/etc/bind/zones/db.sridemo.com";
+        file "/etc/bind/zones/db.edurekademo.com";
 		#allow-transfer { 192.168.33.84; };         # ns2  secondary Name Server
         };
 zone "168.192.in-addr.arpa" {
@@ -56,53 +52,55 @@ zone "168.192.in-addr.arpa" {
 ##Create Forward Zone files
 sudo mkdir /etc/bind/zones
 cd /etc/bind/zones
-sudo cp ../db.local ./db.sridemo.com
-sudo vi /etc/bind/zones/db.sridemo.com
+sudo cp ../db.local ./db.edurekademo.com
+sudo vi /etc/bind/zones/db.edurekademo.com
 
 $TTL    604800
-@       IN      SOA     demo1.sridemo.com. admin.sridemo.com. (
+@       IN      SOA     test011.edurekademo.com. admin.edurekademo.com. (
                               2         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ;
-#@       IN      NS      localhost.      ; delete this line
-#@       IN      A       127.0.0.1       ; delete this line
-#@       IN      AAAA    ::1             ; delete this line
 ; name servers - NS records
-    IN      NS      demo1.sridemo.com.
+    IN      NS      test01.edurekademo.com.
 
 ; name servers - A records
-demo1.sridemo.com.          IN      A       192.168.33.80
+test01.edurekademo.com.          IN      A       192.168.33.86
 
 ; 10.128.0.0/16 - A records
-chef.sridemo.com.        IN      A      192.168.33.80
-demo2.sridemo.com.        IN      A      192.168.33.81
-proxy.sridemo.com.        IN      A      192.168.33.82
-chef.sridemo.com.        IN      A      192.168.33.83
+test02.edurekademo.com.          IN      A       192.168.33.87
+test03.edurekademo.com.          IN      A       192.168.33.88
+test04.edurekademo.com.          IN      A       192.168.33.88
+test05.edurekademo.com.          IN      A       192.168.33.89
+test06.edurekademo.com.          IN      A       192.168.33.90
+test07.edurekademo.com.          IN      A       192.168.33.91
 
 ##Create Reverse Zone files... 
 sudo vi /etc/bind/zones/db.192.168 # must match what you have in named.local.conf
 $TTL    604800
-@       IN      SOA     demo1.sridemo.com. admin.sridemo.com. (
+@       IN      SOA     test01.edurekademo.com. admin.edurekademo.com. (
                               3         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ; name servers
-      IN      NS      demo1.sridemo.com.
+      IN      NS      test01.edurekademo.com.
 
 ; PTR Records
-80.33   IN      PTR     demo1.sridemo.com.    ; 192.168.33.80
-81.33   IN      PTR     demo2.sridemo.com.    ; 192.168.33.81
-82.33   IN      PTR     proxy.sridemo.com.    ; 192.168.33.82
-83.33   IN      PTR     chef.sridemo.com.    ; 192.168.33.83
+86.33   IN      PTR     test01.edurekademo.com.    ; 192.168.33.86
+87.33   IN      PTR     test02.edurekademo.com.    ; 
+88.33   IN      PTR     test03.edurekademo.com.    ;  
+89.33   IN      PTR     test04.edurekademo.com.    ;  
+90.33   IN      PTR     test05.edurekademo.com.    ;  
+91.33   IN      PTR     test06.edurekademo.com.    ;  
+92.33   IN      PTR     test07.edurekademo.com.    ;  
 
 ## Check Configuration.
 sudo named-checkconf
-sudo named-checkzone sridemo.com db.sridemo.com
+sudo named-checkzone edurekademo.com db.edurekademo.com
 sudo named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.192.168
 
 ## if all fine, restart
@@ -114,9 +112,9 @@ sudo vi /etc/resolvconf/resolv.conf.d/head
 
 sudo vi/etc/resolv.conf 
 ## add below lines
-search sridemo.com  # your private domain
-nameserver 192.168.33.80  # ns1 private IP address
+search edurekademo.com  # your private domain
+nameserver 192.168.33.86  # ns1 private IP address
 ## onCentos
 sudo vi /etc/resolv.conf
 ## Use nslookup or dig fto test this...
-dig -tAXFR sridemo.com
+dig -tAXFR edurekademo.com
