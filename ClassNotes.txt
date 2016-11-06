@@ -3,6 +3,8 @@ test01.edurekademo.com: DNS Server
 test06.edurekademo.com: APACHE/NGINX on Ubuntu 14
 test07.edurekademo.com: APACHE/NGINX on Centos 
 test02.edurekademo.com: HA Proxy
+
+edurekademo.com
 ***** GITHUB LINK
 	  https://github.com/SeshagiriSriram/LearningMaterialsDevops 
 	  Install DNS,APACHE/NGINX,HAPROXY.docx 
