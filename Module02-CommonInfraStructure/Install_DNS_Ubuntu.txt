@@ -1,6 +1,4 @@
-## Problem statement: We wil 
-# Install DNS on demo1 (192.168.33.86)
-# Make sure BIND is at least at version 9.5+. This check is not included in code...
+# Install DNS on demo1 (192.168.33.80)
 sudo apt-get install bind9 bind9utils bind9-doc dnsutils -y 
 # Add support for IPV4 
 sudo vi /etc/default/bind9
@@ -8,36 +6,40 @@ sudo vi /etc/default/bind9
 # OPTIONS="-4 -u bind"
 
 # Add ACL
-# oN windows, edit the file named.conf.options with notepad, on linux with vi/vim
+# oN windows, edit the file with notepad, on linux with vi/vim
 sudo vim named.conf.options
 # ADd this line: 
 acl "trusted" {
-        192.168.33.86;    # ns1 - can be set to localhost
-
+        192.168.33.80;    # ns1 - can be set to localhost
+        #10.128.20.12;    # ns2
+        192.168.33.81;  # host1
+        192.168.33.82;  # host2
+		192.168.33.83;  # host3
+		192.168.56.1;   # Our windows host also :-)
 };
 #Below the directory directive, add the highlighted configuration lines (and substitute in the proper ns1 IP address) so it looks something like this:
 options {
         directory "/var/cache/bind";
 
         recursion yes;                 # enables resursive queries
-        allow-recursion { trusted; };  # allows recursive queries from "trusted" clients, this is bad. make sure it it is restricted...
+        allow-recursion { any; };  # allows recursive queries from "trusted" clients
         listen-on { any; };  # ns1 private IP address - listen on private network only
         allow-transfer { any; };      # disable zone transfers by default
 
-        forwarders {				   # Where should queries be forwarded?? Add your own ISP Server DNS server and make sure it can be reached
+        forwarders {				   # Where should queries be forwarded??
                 8.8.8.8;
                 8.8.4.4;
         };
 ...
 };
 
-# Restart bind, Bind is UNIX implementation of DNS. 
+# Restart bind
 sudo /etc/init.d/bind9 start
 # Check configuration... Verify....
 dig @127.0.0.1 ubuntu.com 
 
-##### Edit Local File...ok
-sudo vi /etc/bind/named.conf.local, Add following lines... Adapt for your own code.. 
+##### Edit Local File...
+sudo vim /etc/bind/named.conf.local
 zone "edurekademo.com" {
         type master;
         file "/etc/bind/zones/db.edurekademo.com";
@@ -56,47 +58,45 @@ sudo cp ../db.local ./db.edurekademo.com
 sudo vi /etc/bind/zones/db.edurekademo.com
 
 $TTL    604800
-@       IN      SOA     test011.edurekademo.com. admin.edurekademo.com. (
+@       IN      SOA     demo1.edurekademo.com. admin.edurekademo.com. (
                               2         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ;
+#@       IN      NS      localhost.      ; delete this line
+#@       IN      A       127.0.0.1       ; delete this line
+#@       IN      AAAA    ::1             ; delete this line
 ; name servers - NS records
-    IN      NS      test01.edurekademo.com.
+    IN      NS      demo1.edurekademo.com.
 
 ; name servers - A records
-test01.edurekademo.com.          IN      A       192.168.33.86
+demo1.edurekademo.com.          IN      A       192.168.33.80
 
 ; 10.128.0.0/16 - A records
-test02.edurekademo.com.          IN      A       192.168.33.87
-test03.edurekademo.com.          IN      A       192.168.33.88
-test04.edurekademo.com.          IN      A       192.168.33.88
-test05.edurekademo.com.          IN      A       192.168.33.89
-test06.edurekademo.com.          IN      A       192.168.33.90
-test07.edurekademo.com.          IN      A       192.168.33.91
+chef.edurekademo.com.        IN      A      192.168.33.80
+demo2.edurekademo.com.        IN      A      192.168.33.81
+proxy.edurekademo.com.        IN      A      192.168.33.82
+chef.edurekademo.com.        IN      A      192.168.33.83
 
 ##Create Reverse Zone files... 
 sudo vi /etc/bind/zones/db.192.168 # must match what you have in named.local.conf
 $TTL    604800
-@       IN      SOA     test01.edurekademo.com. admin.edurekademo.com. (
+@       IN      SOA     demo1.edurekademo.com. admin.edurekademo.com. (
                               3         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ; name servers
-      IN      NS      test01.edurekademo.com.
+      IN      NS      demo1.edurekademo.com.
 
 ; PTR Records
-86.33   IN      PTR     test01.edurekademo.com.    ; 192.168.33.86
-87.33   IN      PTR     test02.edurekademo.com.    ; 
-88.33   IN      PTR     test03.edurekademo.com.    ;  
-89.33   IN      PTR     test04.edurekademo.com.    ;  
-90.33   IN      PTR     test05.edurekademo.com.    ;  
-91.33   IN      PTR     test06.edurekademo.com.    ;  
-92.33   IN      PTR     test07.edurekademo.com.    ;  
+80.33   IN      PTR     demo1.edurekademo.com.    ; 192.168.33.80
+81.33   IN      PTR     demo2.edurekademo.com.    ; 192.168.33.81
+82.33   IN      PTR     proxy.edurekademo.com.    ; 192.168.33.82
+83.33   IN      PTR     chef.edurekademo.com.    ; 192.168.33.83
 
 ## Check Configuration.
 sudo named-checkconf
@@ -109,12 +109,9 @@ sudo service bind9 restart
 ## Configure DNS clients
 ## On Ubuntu
 sudo vi /etc/resolvconf/resolv.conf.d/head
-
-sudo vi/etc/resolv.conf 
 ## add below lines
 search edurekademo.com  # your private domain
-nameserver 192.168.33.86  # ns1 private IP address
+nameserver 192.168.33.80  # ns1 private IP address
 ## onCentos
 sudo vi /etc/resolv.conf
-## Use nslookup or dig fto test this...
-dig -tAXFR edurekademo.com
+## Use nslookup to test this...

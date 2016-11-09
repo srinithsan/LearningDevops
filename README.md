@@ -3,6 +3,16 @@ The following directory (project) is intended for additional materials on Devops
 *  logically organize the folders and materials
 * Add additional materials for Devops, including link sites. 
 
+The main material is organized into 8 modules: 
+* Module 1: Getting Started with Devops
+* Module 2: common Infra Structure Servers
+* Module 3: Bare Metal Server installs, Package Managers
+* Module 4: Performance Monitoring and basic security
+* Module 5: Jenkins and Puppet
+* Module 6: Ansible and Salt
+* MOdule 7: Chef
+* Module 8: Nagios and Performance Monitoring 
+
 The installation material, while largely focussing on Ubuntu 14.04 LTS, can easily be adapted to other OS. Any scripts provided here are "as-is" (USE AT YOUR OWN RISK)
 
 ## Required Software

@@ -1,0 +1,310 @@
+http://centoshowtos.org/installation/kickstart-and-cobbler/
+# set SELINUX to either disabled or permissive
+sed -i 's/SELINUX\=enforcing/SELINUX\=disabled/g'/etc/selinux/config
+#Shut off iptables and disable from boot
+/etc/init.d/iptables stop
+/sbin/chkconfig iptables off
+# setup EPEL Repos
+rpm -i http://mirror.symnds.com/distributions/fedora-epel/6/x86_64/epel-release-6-8.noarch.rpm
+# install cobbler and dependencies 
+yum -y install tftp-server httpd cobbler cobbler-web pykickstart system-config-kickstart dhcp mod_python wget tftp
+#Enable tftp and rsync in xinetd
+#We want to make sure tftp and rsync are enabled otherwise pxeboot will not work properly. Edit the /etc/xinetd.d/tftp and /etc/xinetd.d/rsync files and change disable = yes to disable = no.
+vi /etc/xinetd.d/tftp #change disable = yes to disable = no
+***************************************************************
+My /etc/xinetd.d/tftp looks like this:
+
+# default: off
+# description: The tftp server serves files using the trivial file transfer \
+#       protocol.  The tftp protocol is often used to boot diskless \
+#       workstations, download configuration files to network-aware printers, \
+#       and to start the installation process for some operating systems.
+service tftp
+{
+        socket_type             = dgram
+        protocol                = udp
+        wait                    = yes
+        user                    = root
+        server                  = /usr/sbin/in.tftpd
+        server_args             = -s /var/lib/tftpboot
+        disable                 = no
+        per_source              = 11
+        cps                     = 100 2
+        flags                   = IPv4
+}
+**********************************************
+#Now edit the xinetd for rsync conf
+
+vi /etc/xinetd.d/rsync #change disable = yes to disable = no
+**********************************************
+My /etc/xinetd.d/rsync looks like this:
+
+# default: off
+# description: The rsync server is a good addition to an ftp server, as it \
+#       allows crc checksumming etc.
+service rsync
+{
+        disable = no
+        flags           = IPv6
+        socket_type     = stream
+        wait            = no
+        user            = root
+        server          = /usr/bin/rsync
+        server_args     = --daemon
+        log_on_failure  += USERID
+}
+**********************************************
+
+#Restart xinetd
+/etc/init.d/xinetd restart
+#Start xinetd on boot
+/sbin/chkconfig xinetd on
+#Start cobbler services
+#Now lets start the apache webserver (httpd), and cobbler itself. Apache is required by cobbler to serve up the OS images.
+
+/etc/init.d/httpd start
+service cobblerd stop 
+/etc/init.d/cobblerd start
+/sbin/chkconfig httpd on
+/sbin/chkconfig cobblerd on
+#Install cobbler loaders
+
+cobbler get-loaders
+#Generate a password hash
+
+openssl passwd -1 -salt ‘random-phrase-here’ ‘your-password-here’
+#I get the hash below for the password motorrobot
+
+[root@puppet ~]# openssl passwd -1 -salt ‘centoshowtos-rule’ ‘motorrobot’       $1$centosho$05Gidn0z8BjDu2ZbV4fS.0
+#Edit /etc/cobbler/settings
+Change: next_server: 127.0.0.1 to next_server: 192.168.7.2
+Change: server: 127.0.0.1 to server: 192.168.7.2
+Change: default_password_crypted: “$1$mF86/UHC$WvcIcX2t6crBz2onWxyac.” to above generated hash default_password_crypted: “$1$centosho$05Gidn0z8BjDu2ZbV4fS.0″
+Change: manage_dhcp: 0 to manage_dhcp: 1
+
+sed -i ‘s/server\:\ 127\.0\.0\.1/server\:\ 192\.168\.7\.2/g’ /etc/cobbler/settings
+sed -i ‘s/default\_password\_crypted\:\ \”\$1\$mF86\/UHC\$WvcIcX2t6crBz2onWxyac\.\”/default\_password\_crypted\:\ \”\$1\$centosho\$05Gidn0z8BjDu2ZbV4fS\.0\”/g’ /etc/cobbler/settings
+sed -i ‘s/manage_dhcp: 0/manage_dhcp: 1/g’ /etc/cobbler/settings
+#vi /etc/cobbler/settings
+**********************************************
+
+My Page looks like this:
+
+allow_duplicate_hostnames: 0
+allow_duplicate_ips: 0
+allow_duplicate_macs: 0
+anamon_enabled: 0
+authn_pam_service: "login"
+build_reporting_enabled: 0
+build_reporting_sender: ""
+build_reporting_email: [ 'root@localhost' ]
+build_reporting_smtp_server: "localhost"
+build_reporting_subject: ""
+ 
+cheetah_import_whitelist:
+   - "random"
+   - "re"
+   - "time"
+ 
+createrepo_flags: "-c cache -s sha"
+default_kickstart: /var/lib/cobbler/kickstarts/default.ks
+default_name_servers: []
+default_ownership:
+    - "admin"
+default_password_crypted: "$1$centosho$05Gidn0z8BjDu2ZbV4fS.0"
+default_template_type: "cheetah"
+default_virt_bridge: xenbr0
+default_virt_file_size: 5
+default_virt_ram: 512
+default_virt_type: xenpv
+enable_gpxe: 0
+enable_menu: 1
+func_auto_setup: 0
+func_master: overlord.example.org
+http_port: 80
+kernel_options:
+    ksdevice: bootif
+    lang: ' '
+    text: ~
+kernel_options_s390x:
+    RUNKS: 1
+    ramdisk_size: 40000
+    root: /dev/ram0
+    ro: ~
+    ip: off
+    vnc: ~
+ldap_server: "ldap.example.com"
+ldap_base_dn: "DC=example,DC=com"
+ldap_port: 389
+ldap_tls: 1
+ldap_anonymous_bind: 1
+ldap_search_bind_dn: ''
+ldap_search_passwd: ''
+ldap_search_prefix: 'uid='
+mgmt_classes: []
+mgmt_parameters:
+   from_cobbler: 1
+puppet_auto_setup: 0
+sign_puppet_certs_automatically: 0
+puppetca_path: "/usr/sbin/puppetca"
+remove_old_puppet_certs_automatically: 0
+manage_dhcp: 1
+manage_dns: 0
+bind_chroot_path: ""
+bind_master: 127.0.0.1
+manage_tftpd: 1
+manage_rsync: 0
+manage_forward_zones: []
+manage_reverse_zones: []
+next_server: 192.168.7.2
+power_management_default_type: 'ipmitool'
+power_template_dir: "/etc/cobbler/power"
+pxe_just_once: 1
+pxe_template_dir: "/etc/cobbler/pxe"
+consoles: "/var/consoles"
+redhat_management_type: "off"
+redhat_management_server: "xmlrpc.rhn.redhat.com"
+redhat_management_key: ""
+redhat_management_permissive: 0
+register_new_installs: 0
+reposync_flags: "-l -m -d"
+restart_dns: 1
+restart_dhcp: 1
+run_install_triggers: 1
+scm_track_enabled: 0
+scm_track_mode: "git"
+server: 192.168.7.2
+client_use_localhost: 0
+snippetsdir: /var/lib/cobbler/snippets
+template_remote_kickstarts: 0
+physical host reboots?
+virt_auto_boot: 1
+webdir: /var/www/cobbler
+xmlrpc_port: 25151
+yum_post_install_mirror: 1
+yum_distro_priority: 1
+yumdownloader_flags: "--resolve"
+serializer_pretty_json: 0
+**********************************************
+
+#Edit dhcp template 
+#Edit the dhcp template now and make sure it’s accurate to your network. Also specify the range for the pool, I tend to keep mine smaller.
+
+My /etc/cobbler/dhcp.template
+
+# ******************************************************************
+# Cobbler managed dhcpd.conf file
+#
+# generated from cobbler dhcp.conf template ($date)
+# Do NOT make changes to /etc/dhcpd.conf. Instead, make your changes
+# in /etc/cobbler/dhcp.template, as /etc/dhcpd.conf will be
+# overwritten.
+#
+# ******************************************************************
+ 
+ddns-update-style interim;
+ 
+allow booting;
+allow bootp;
+ 
+ignore client-updates;
+set vendorclass = option vendor-class-identifier;
+ 
+subnet 192.168.33.0 netmask 255.255.255.0 {
+     option routers             192.168.33.92;
+     option domain-name-servers 192.168.33.86;
+     option subnet-mask         255.255.255.0;
+     range dynamic-bootp        192.168.33.180 192.168.33.254;
+     filename                   "/pxelinux.0";
+     default-lease-time         21600;
+     max-lease-time             43200;
+     next-server                $next_server;
+}
+ 
+#for dhcp_tag in $dhcp_tags.keys():
+    ## group could be subnet if your dhcp tags line up with your subnets
+    ## or really any valid dhcpd.conf construct ... if you only use the
+    ## default dhcp tag in cobbler, the group block can be deleted for a
+    ## flat configuration
+# group for Cobbler DHCP tag: $dhcp_tag
+group {
+        #for mac in $dhcp_tags[$dhcp_tag].keys():
+            #set iface = $dhcp_tags[$dhcp_tag][$mac]
+    host $iface.name {
+        hardware ethernet $mac;
+        #if $iface.ip_address:
+        fixed-address $iface.ip_address;
+        #end if
+        #if $iface.hostname:
+        option host-name "$iface.hostname";
+        #end if
+        #if $iface.netmask:
+        option subnet-mask $iface.netmask;
+        #end if
+        #if $iface.gateway:
+        option routers $iface.gateway;
+        #end if
+        #if $iface.enable_gpxe:
+        if exists user-class and option user-class = "gPXE" {
+            filename"http://$cobbler_server/cblr/svc/op/gpxe/system/$iface.owner";
+        } else {
+            filename "undionly.kpxe";
+        }
+        #else
+        filename "$iface.filename";
+        #end if
+        ## Cobbler defaults to $next_server, but some users
+        ## may like to use $iface.system.server for proxied setups
+        next-server $next_server;
+        ## next-server $iface.next_server;
+    }
+        #end for
+}
+#end for
+
+#Enable web interface authentication
+
+sed -i 's/module = authn_denyall/module = authn_configfile/g' /etc/cobbler/modules.conf
+#Create cobbler web user and set password
+
+htdigest /etc/cobbler/users.digest "Cobbler" cobbler
+#Download the iso of a distro you want to import
+
+cd /root/
+wget http://mirrors.seas.harvard.edu/centos/6.8/isos/x86_64/CentOS-6.8-x86_64-bin-DVD1.iso
+#Mount the ISO of the distro
+
+mount -o loop /root/CentOS-6.8-x86_64-bin-DVD1.iso /mnt/
+#Import the distro
+#Run cobbler import give the distro a name
+
+cobbler import --path=/mnt/ --name=cent68-x86_64
+#Restart and sync cobbler
+
+/etc/init.d/cobblerd restart
+cobbler sync
+#Kickstarting a Server
+Network boot a server or virtual server that’s connected to the network. This is typically an option in the bios, or I know with VMWare and Dell servers you can hit F12 as it’s booting.
+
+Cobbler Boot Screen
+Cobbler bootscreen default CentOS6 Kickstart
+
+Arrow down and highlight “cent65-x86_64″ and press enter.
+
+At this point a minimal CentOS 6.5 Server will be installed automatically.
+
+You will boot into the machine, and login with root and the password that you generated and put into cobbler. It’ll be used as the default root on all installations.
+
+You can get the MAC address of the server that just kickstarted bu looking in the /var/log/messages of the cobbler server and grepping for dhcp. Once you have that mac address, you can create a system in cobbler that associates the mac address with a profile, and allows you to assign network and hostname settings, etc.
+
+#cobbler system add --name=motorrobot1 --profile=cent65-x86_64 --mac=08:00:27:c4:e7:ea --ip-address=192.168.7.51 --hostname=motorrobot1.example.motorrobot.net --netboot-enabled=Y --gateway=192.168.7.1 --static=Y --name-servers=192.168.7.1
+###### NOT NEEDED ABOVE #######
+
+
+$1$testcode$pzse8VO2G3mkw.bVTUndE/
+default_kickstart: /var/lib/cobbler/kickstarts/default.ks
+password: mycodepassword
+
+VBoxManage natnetwork add --netname natnet1 --network "192.168.33.0/24" --enable --dhcp on
+
+http://192.168.33.92/cblr/svc/op/ks/profile/cent68_6-x86_64
