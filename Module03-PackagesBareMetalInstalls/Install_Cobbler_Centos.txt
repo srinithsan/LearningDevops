@@ -76,6 +76,7 @@ openssl passwd -1 -salt ‘random-phrase-here’ ‘your-password-here’
 #I get the hash below for the password motorrobot
 
 [root@puppet ~]# openssl passwd -1 -salt ‘centoshowtos-rule’ ‘motorrobot’       $1$centosho$05Gidn0z8BjDu2ZbV4fS.0
+
 #Edit /etc/cobbler/settings
 Change: next_server: 127.0.0.1 to next_server: 192.168.7.2
 Change: server: 127.0.0.1 to server: 192.168.7.2
@@ -270,6 +271,7 @@ sed -i 's/module = authn_denyall/module = authn_configfile/g' /etc/cobbler/modul
 htdigest /etc/cobbler/users.digest "Cobbler" cobbler
 #Download the iso of a distro you want to import
 
+### START OF GRUNT WORK ###### 
 cd /root/
 wget http://mirrors.seas.harvard.edu/centos/6.8/isos/x86_64/CentOS-6.8-x86_64-bin-DVD1.iso
 #Mount the ISO of the distro
@@ -279,6 +281,13 @@ mount -o loop /root/CentOS-6.8-x86_64-bin-DVD1.iso /mnt/
 #Run cobbler import give the distro a name
 
 cobbler import --path=/mnt/ --name=cent68-x86_64
+
+# Do same for Ubuntu
+wget http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-server-amd64.iso
+
+#download XYZ OS
+cobbler import --path=/mnt/ --name=XYZ 
+
 #Restart and sync cobbler
 
 /etc/init.d/cobblerd restart
@@ -301,9 +310,10 @@ You can get the MAC address of the server that just kickstarted bu looking in th
 ###### NOT NEEDED ABOVE #######
 
 
-$1$testcode$pzse8VO2G3mkw.bVTUndE/
+salt: mycode
+password: mypassword
+Hash: $1$mycode$IrIoxOtfgexEU0CejvgTJ1  # this will be root: password - mypassword
 default_kickstart: /var/lib/cobbler/kickstarts/default.ks
-password: mycodepassword
 
 VBoxManage natnetwork add --netname natnet1 --network "192.168.33.0/24" --enable --dhcp on
 

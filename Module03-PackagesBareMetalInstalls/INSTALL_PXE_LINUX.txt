@@ -1,12 +1,14 @@
 http://www.jedi.be/blog/
 *** PXE Server Setup
 	Setup Centos with DHCP already setup
+		*** yum install dhcp3 
+		**** edit /etc/dhcp.conf 
 	Set up TFTP
 		sudo yum install tftp-server
 	Enable TFTP	
-		edit /etc/xinetd.d/tftp and set disable to no
+		edit /etc/xinetd.d/tftp and set disable to no ## /var/lib/tftpboot is it specified?
 	Restart xinetd	
-		service xinetd restart
+		service xinetd restart 
 **** Set up Boot Images
 	mkdir -p /tftpboot/images/centos/i386/3.0
 	mkdir -p /tftpboot/images/centos/i386/3.1
@@ -29,10 +31,11 @@ For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/
 	Edit /etc/dhcpd.conf
 	allow booting;
 	allow bootp;
-	option option-128 code 128 = string;
-	option option-129 code 129 = text;
+	#option option-128 code 128 = string;
+	#option option-129 code 129 = text;
 	next-server 192.168.33.92;  
-	filename "/pxelinux.0";
+	filename "/pxelinux.0"; # is the boot image... hardcoded for *nx... 
+	++++ Other DHCP Configurations... 
 *** REstart DHCP	
 	service dhcpd restart
 *** Install sysLinux
@@ -52,8 +55,8 @@ For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/
 	
 	LABEL CENTOS 53
 	KERNEL images/centos/5.3/i386/vmlinuz
-	APPEND initrd=images/centos/5.3/i386/initrd.img ip=10.100.2.34 ks=http://10.10.100.200/x.cfg 
+	APPEND initrd=images/centos/5.3/i386/initrd.img  ks=http://10.10.100.200/centos.cfg 
 	
 	LABEL UBUNTU
 	KERNEL images/ubuntu/5.3/i386/vmlinuz
-	APPEND initrd=images/ubuntu/5.3/i386/initrd.img
+	APPEND initrd=images/ubuntu/5.3/i386/initrd.img ks=http://10.10.100.200/ubuntu.cfg 
