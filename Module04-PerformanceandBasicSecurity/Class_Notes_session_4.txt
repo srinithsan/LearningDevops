@@ -165,6 +165,7 @@ chkconfig --level 345 iptables on
 service ipchains stop
 chkconfig --level 345 ipchains off
 
+UFW 
 iptables -A <chain> -j <target>
 
  The three built-in chains are INPUT, OUTPUT, and FORWARD. These chains are permanent and cannot be deleted. The chain specifies the point at which a packet is manipulated.
@@ -186,10 +187,9 @@ iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 sysctl -w net.ipv4.ip_forward=1
 
 
-
-    Red Hat Linux Firewalls, by Bill McCarty; Red Hat Press — a comprehensive reference to building network and server firewalls using open source packet filtering technology such as Netfilter and iptables. It includes topics that cover analyzing firewall logs, developing firewall rules, and customizing your firewall using various graphical tools.
-
-    Linux Firewalls, by Robert Ziegler; New Riders Press — contains a wealth of information on building firewalls using both 2.2 kernel ipchains as well as Netfilter and iptables. Additional security topics such as remote access issues and intrusion detection systems are also covered.
+***** BOOKS AND REFERENCES
+Red Hat Linux Firewalls, by Bill McCarty; Red Hat Press — a comprehensive reference to building network and server firewalls using open source packet filtering technology such as Netfilter and iptables. It includes topics that cover analyzing firewall logs, developing firewall rules, and customizing your firewall using various graphical tools.
+Linux Firewalls, by Robert Ziegler; New Riders Press — contains a wealth of information on building firewalls using both 2.2 kernel ipchains as well as Netfilter and iptables. Additional security topics such as remote access issues and intrusion detection systems are also covered.
 
 ## either firewalld or iptables
 systemctl stop firewalld

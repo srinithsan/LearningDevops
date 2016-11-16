@@ -12,7 +12,7 @@ cd $HOME
 mkdir -p ansible-nginx/tasks/						#make Directory
 touch ansible-nginx/deploy.yml						#Deployer file
 touch ansible-nginx/tasks/install_nginx.yml	#Task definition for centos
-# we are going to install NGINX on 192.168.33.81 (demo2, Centos) and 192.168.33.82 (proxy, Ubuntu)
+# we are going to install NGINX on 192.168.33.92 (test07.edurekademo.co, Centos) and 192.168.33.82 (proxy, Ubuntu)
 # to see above directory structure "nicely" use tree
 # sudo apt-get install tree -y (or)sudo yum install -y tree
 # Content for deploy.yml, 

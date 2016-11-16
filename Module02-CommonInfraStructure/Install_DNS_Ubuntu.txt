@@ -1,9 +1,11 @@
-# Install DNS on demo1 (192.168.33.80)
+# Install DNS on demo1 (192.168.33.86)
 sudo apt-get install bind9 bind9utils bind9-doc dnsutils -y 
+# yum install bind bindutils -y 
 # Add support for IPV4 
 sudo vi /etc/default/bind9
 # Add (OR) Edit this line: 
 # OPTIONS="-4 -u bind"
+# above not required for CENTOS 
 
 # Add ACL
 # oN windows, edit the file with notepad, on linux with vi/vim
@@ -21,8 +23,8 @@ acl "trusted" {
 options {
         directory "/var/cache/bind";
 
-        recursion yes;                 # enables resursive queries
-        allow-recursion { any; };  # allows recursive queries from "trusted" clients
+        recursion no;                 # enables resursive queries
+        allow-recursion { trusted; };  # allows recursive queries from "trusted" clients
         listen-on { any; };  # ns1 private IP address - listen on private network only
         allow-transfer { any; };      # disable zone transfers by default
 
