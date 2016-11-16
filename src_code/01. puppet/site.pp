@@ -29,7 +29,7 @@ tomcat::instance { 'default':
                    catalina_base => '/opt/tomcat',
                  }
 
-				 # install a war addressbook.war. The file addressbook.war is located in 
+# install a war addressbook.war. The file addressbook.war is located in 
 # /etc/puppet/modules/tomcat/files. (Assuming default module path in Puppet 3.7.x)
 # If this file does not exist, create it manually or use a file resource to create the same. 
 tomcat::war { 'addressbook.war':
