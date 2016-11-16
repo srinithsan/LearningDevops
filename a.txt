@@ -1,0 +1,18 @@
+total 96
+drwxr-xr-x 1 sesha 197609    0 Nov 13 09:07 ./
+drwxr-xr-x 1 sesha 197609    0 Nov 12 23:51 ../
+drwxr-xr-x 1 sesha 197609    0 Nov 13 09:07 .git/
+-rw-r--r-- 1 sesha 197609    0 Nov 13 09:07 a.txt
+-rw-r--r-- 1 sesha 197609 1993 Nov 11 00:48 ClassNotes.txt
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module01-GettingStartedWithDevops/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module02-CommonInfraStructure/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module03-PackagesBareMetalInstalls/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module04-PerformanceandBasicSecurity/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module05-Jenkins,GitandPuppet/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module6-SaltandAnsible/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module7-Chef/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 Module8-NagiosandMiscStuff/
+-rw-r--r-- 1 sesha 197609 1151 Nov 11 00:48 NOTES_Nice_Links_to_acquire.txt
+-rw-r--r-- 1 sesha 197609 2059 Nov 11 00:48 README.md
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 scripts/
+drwxr-xr-x 1 sesha 197609    0 Nov 11 00:48 ZIP_OF_VERY_OLD_CLASS_NOTES-DONOTUSE/
