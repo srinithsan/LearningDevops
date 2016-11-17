@@ -11,6 +11,7 @@
 	https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_12.8.0-1_ppc64el.debd
 	
 	wget -O chef-server-11.deb https://packages.chef.io/stable/ubuntu/12.04/chef-server_11.1.7-1_amd64.deb
+	# first.... ensure Apache and nginx is not running.. 
 	sudo dpkg -i chef-server-11.deb
 	sudo apt-get update 
 ** configure the same and restart it..
@@ -98,7 +99,12 @@ https://github.com/bsharitt/tomcat8
   ]
 }
 
+# hack for powershell users...... 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted 
 
+## misc code... 
+sudo chef-server-ctl uninstall
+sudo chef-server-ctl stop
 
-chef-server-ctl uninstall
+# see this link to see how to fix issue for certificates
+http://jtimberman.housepub.org/blog/2014/12/11/chef-12-fix-untrusted-self-sign-certs/
