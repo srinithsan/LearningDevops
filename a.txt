@@ -1,0 +1,24 @@
+ Volume in drive E is NEW E DRIVE
+ Volume Serial Number is F4C9-EFCB
+
+ Directory of E:\github\LearningMaterialsDevops
+
+19-11-2016  23:40    <DIR>          .
+19-11-2016  23:40    <DIR>          ..
+19-11-2016  23:40                 0 a.txt
+06-11-2016  10:59             1,993 DEMOFILE.txt
+12-11-2016  22:58    <DIR>          Module01-GettingStartedWithDevops
+09-11-2016  23:02    <DIR>          Module02-CommonInfraStructure
+19-11-2016  23:35    <DIR>          Module03-PackagesBareMetalInstalls
+09-11-2016  23:08    <DIR>          Module04-PerformanceandBasicSecurity
+09-11-2016  23:15    <DIR>          Module05-Jenkins,GitandPuppet
+09-11-2016  23:15    <DIR>          Module6-SaltandAnsible
+09-11-2016  23:15    <DIR>          Module7-Chef
+09-11-2016  23:14    <DIR>          Module8-NagiosandMiscStuff
+11-06-2016  19:36             1,151 NOTES_Nice_Links_to_acquire.txt
+09-11-2016  22:59             2,059 README.md
+02-10-2016  10:22    <DIR>          scripts
+16-11-2016  17:22    <DIR>          src_code
+09-11-2016  23:10    <DIR>          ZIP_OF_VERY_OLD_CLASS_NOTES-DONOTUSE
+               4 File(s)          5,203 bytes
+              13 Dir(s)  103,196,504,064 bytes free
