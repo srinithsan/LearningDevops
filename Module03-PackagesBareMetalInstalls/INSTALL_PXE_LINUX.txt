@@ -41,7 +41,7 @@ For each "Release" and "ARCH", copy vmlinuz and initrd.img from /images/pxeboot/
 *** Install sysLinux
 	yum install syslinux
 **** Copy needed files
-    cp /usr/lib/syslinux/pxelinux.0 /tftpboot
+    cp /usr/lib/syslinux/pxelinux.0 /var/lib/tftpboot
 	cp /usr/lib/syslinux/menu.c32 /tftpboot
 	cp /usr/lib/syslinux/memdisk /tftpboot
 	cp /usr/lib/syslinux/mboot.c32 /tftpboot

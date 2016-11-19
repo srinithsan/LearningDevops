@@ -191,7 +191,7 @@ sysctl -w net.ipv4.ip_forward=1
 Red Hat Linux Firewalls, by Bill McCarty; Red Hat Press — a comprehensive reference to building network and server firewalls using open source packet filtering technology such as Netfilter and iptables. It includes topics that cover analyzing firewall logs, developing firewall rules, and customizing your firewall using various graphical tools.
 Linux Firewalls, by Robert Ziegler; New Riders Press — contains a wealth of information on building firewalls using both 2.2 kernel ipchains as well as Netfilter and iptables. Additional security topics such as remote access issues and intrusion detection systems are also covered.
 
-## either firewalld or iptables
+## either firewalld or iptables or UFW
 systemctl stop firewalld
 systemctl mask firewalld
 systemctl status firewalld

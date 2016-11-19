@@ -1,6 +1,10 @@
+### Author: 
+### Date: Nov 19 2016 10:54 PM IST 
+### changelog: 
 http://centoshowtos.org/installation/kickstart-and-cobbler/
 # set SELINUX to either disabled or permissive
-sed -i 's/SELINUX\=enforcing/SELINUX\=disabled/g'/etc/selinux/config
+# edit the file ad chnage it...
+sed -i 's/SELINUX\=enforcing/SELINUX\=disabled/g' /etc/selinux/config
 #Shut off iptables and disable from boot
 /etc/init.d/iptables stop
 /sbin/chkconfig iptables off
@@ -78,8 +82,8 @@ openssl passwd -1 -salt ‘random-phrase-here’ ‘your-password-here’
 [root@puppet ~]# openssl passwd -1 -salt ‘centoshowtos-rule’ ‘motorrobot’       $1$centosho$05Gidn0z8BjDu2ZbV4fS.0
 
 #Edit /etc/cobbler/settings
-Change: next_server: 127.0.0.1 to next_server: 192.168.7.2
-Change: server: 127.0.0.1 to server: 192.168.7.2
+Change: next_server: 127.0.0.1 to next_server: 192.168.33.92
+Change: server: 127.0.0.1 to server: 192.168.33.92
 Change: default_password_crypted: “$1$mF86/UHC$WvcIcX2t6crBz2onWxyac.” to above generated hash default_password_crypted: “$1$centosho$05Gidn0z8BjDu2ZbV4fS.0″
 Change: manage_dhcp: 0 to manage_dhcp: 1
 
@@ -87,6 +91,9 @@ sed -i ‘s/server\:\ 127\.0\.0\.1/server\:\ 192\.168\.7\.2/g’ /etc/cobbler/se
 sed -i ‘s/default\_password\_crypted\:\ \”\$1\$mF86\/UHC\$WvcIcX2t6crBz2onWxyac\.\”/default\_password\_crypted\:\ \”\$1\$centosho\$05Gidn0z8BjDu2ZbV4fS\.0\”/g’ /etc/cobbler/settings
 sed -i ‘s/manage_dhcp: 0/manage_dhcp: 1/g’ /etc/cobbler/settings
 #vi /etc/cobbler/settings
+#Modified by Sriram on Nov 12 10:54 PM IST
+# rewrite this to use sed not a vi file... 
+# end of changes.. 
 **********************************************
 
 My Page looks like this:
@@ -280,7 +287,7 @@ mount -o loop /root/CentOS-6.8-x86_64-bin-DVD1.iso /mnt/
 #Import the distro
 #Run cobbler import give the distro a name
 
-cobbler import --path=/mnt/ --name=cent68-x86_64
+cobbler import --path=/mnt/ --name=cent68-x86_64_incomplete
 
 # Do same for Ubuntu
 wget http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-server-amd64.iso
@@ -313,6 +320,7 @@ You can get the MAC address of the server that just kickstarted bu looking in th
 salt: mycode
 password: mypassword
 Hash: $1$mycode$IrIoxOtfgexEU0CejvgTJ1  # this will be root: password - mypassword
+Hash: $1$mycode$IrIoxOtfgexEU0CejvgTJ1
 default_kickstart: /var/lib/cobbler/kickstarts/default.ks
 
 VBoxManage natnetwork add --netname natnet1 --network "192.168.33.0/24" --enable --dhcp on
