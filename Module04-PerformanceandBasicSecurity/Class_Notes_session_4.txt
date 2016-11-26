@@ -227,3 +227,10 @@ http://blog.scoutapp.com/articles/2011/02/10/understanding-disk-i-o-when-should-
 http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages
 https://www.kernel.org/doc/Documentation/sysctl/fs.txt
 http://www.thegeekstuff.com/2011/03/sar-examples/?utm_source=feedburner
+
+## Sar file 
+/etc/cron.d/sysstat
+/etc/default/sysstat
+/var/log/sysstat - (this will change based on OS)
+### INstalling SAR
+apt-get install sysstat
