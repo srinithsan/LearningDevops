@@ -1,6 +1,9 @@
 ## Perforamance Tuning guide for Window Server 2012 R2
 https://msdn.microsoft.com/en-us/library/windows/hardware/dn529133(v=vs.85).aspx
-
+# CPU INO 
+  cat /proc/cpuinfo
+  grep "model name" /proc/cpuinfo  
+ sysctl -n machdep.cpu.brand_string 
 #### IMportant SYSCTL commands
 # List all parameters
 sysctl -a
@@ -117,6 +120,12 @@ ps -o min_flt,maj_flext 1
 ps -o min_flt,maj_flt,cmd,args,uid,gid 1
 ps -eo min_flt,maj_flt,cmd,args,uid,gid | less
 top -d 1
+
+### SAR
+apt-get install sysstat atsar
+edit /etc/default/sysstat and set enable to true
+restart - service sysstat restart
+
 sar -B 1 10
 #/usr/bin/time -v ls /etc/resolv.conf # needs to be installed first..
 
@@ -152,19 +161,9 @@ awk -F: '($3=="0") {print}' /etc/passwd
 # edit /etc/sudoers
 # edit /etc/ssh/sshd_config
 find / -xdev \( -nouser -o -nogroup \) -print
-
+find / -perm 
 chage -M <days> <users>
 ## Firewall
-systemctl enable firewalld
-systemctl status firewalld
-firewall-cmd --get-active-zones
-system-config-selinux
-chkconfig --level 345 iptables on
-service iptables restart
-chkconfig --level 345 iptables on
-service ipchains stop
-chkconfig --level 345 ipchains off
-
 UFW 
 iptables -A <chain> -j <target>
 
@@ -192,6 +191,17 @@ Red Hat Linux Firewalls, by Bill McCarty; Red Hat Press — a comprehensive refe
 Linux Firewalls, by Robert Ziegler; New Riders Press — contains a wealth of information on building firewalls using both 2.2 kernel ipchains as well as Netfilter and iptables. Additional security topics such as remote access issues and intrusion detection systems are also covered.
 
 ## either firewalld or iptables or UFW
+
+systemctl enable firewalld
+systemctl status firewalld
+firewall-cmd --get-active-zones
+system-config-selinux
+chkconfig --level 345 iptables on
+service iptables restart
+chkconfig --level 345 iptables on
+service ipchains stop
+chkconfig --level 345 ipchains off
+
 systemctl stop firewalld
 systemctl mask firewalld
 systemctl status firewalld
@@ -210,3 +220,9 @@ service iptables save
 
 ## NMAP For port scanning... 
 rpm -vhU https://nmap.org/dist/nmap-7.12-1.x86_64.rpm
+
+Useful links... 
+http://www.techrepublic.com/blog/the-enterprise-cloud/calculate-iops-in-a-storage-array/
+http://blog.scoutapp.com/articles/2011/02/10/understanding-disk-i-o-when-should-you-be-worried
+http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages
+https://www.kernel.org/doc/Documentation/sysctl/fs.txt

@@ -132,6 +132,6 @@ base:
 ### Additional links: https://github.com/saltstack-formula 
 
 salt-call [options]
-salt '*' state.highstate 	
+salt '*' state.apply 	
 https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html
 https://docs.saltstack.com/en/latest/ref/states/top.html

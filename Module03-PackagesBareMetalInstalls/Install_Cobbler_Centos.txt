@@ -286,14 +286,24 @@ wget http://mirrors.seas.harvard.edu/centos/6.8/isos/x86_64/CentOS-6.8-x86_64-bi
 mount -o loop /root/CentOS-6.8-x86_64-bin-DVD1.iso /mnt/
 #Import the distro
 #Run cobbler import give the distro a name
+cobbler import --path=/mnt/ --name=cent68-x86_64
+umount /mnt 
 
-cobbler import --path=/mnt/ --name=cent68-x86_64_incomplete
-
+wget http://mirrors.seas.harvard.edu/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-Everything-1511.iso
 # Do same for Ubuntu
 wget http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-server-amd64.iso
+mount -o loop /root/ubuntu-14.04.3-server-amd64.iso /mnt/
+cobbler import --path=/mnt/ --name=ubuntu_1404
+umount /mnt 
+
+wget http://ubuntu.lagis.at/releases/16.10/ubuntu-16.10-server-amd64.iso
+mount -o loop /root/ubuntu-16.10-server-amd64.iso /mnt/
+cobbler import --path=/mnt/ --name=ubuntu_1610
+umount /mnt 
 
 #download XYZ OS
 cobbler import --path=/mnt/ --name=XYZ 
+umount /mnt 
 
 #Restart and sync cobbler
 
@@ -326,3 +336,11 @@ default_kickstart: /var/lib/cobbler/kickstarts/default.ks
 VBoxManage natnetwork add --netname natnet1 --network "192.168.33.0/24" --enable --dhcp on
 
 http://192.168.33.92/cblr/svc/op/ks/profile/cent68_6-x86_64
+
+## Alternate fast speed mirrors
+http://mirror.fibergrid.in/centos/6.8/isos/x86_64/CentOS-6.8-x86_64-bin-DVD1.iso
+http://ubuntu.lagis.at/releases/16.10/ubuntu-16.10-server-amd64.iso
+
+# Other ISO
+http://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/10.3/FreeBSD-10.3-RELEASE-amd64-dvd1.iso
+http://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/10.3/FreeBSD-10.2-RELEASE-amd64-dvd1.iso

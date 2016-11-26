@@ -2,11 +2,11 @@
   yum:
     name: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-  
+ 
 - name: NGINX | Installing NGINX On Centos
   yum:
     name: nginx
-    state: latest
+    state: present
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: NGINX | Installing NGINX On Debian
