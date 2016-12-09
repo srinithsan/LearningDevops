@@ -8,12 +8,12 @@
 	** oN Ubuntu
 	dpkg -i /tmp/chef-server-core-<version>.deb
 	
-	https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_12.8.0-1_ppc64el.debd
+	https://packages.chef.io/stable/ubuntu/14.04/chef-server-core_12.8.0-1_ppc64el.deb
 	
 	wget -O chef-server-11.deb https://packages.chef.io/stable/ubuntu/12.04/chef-server_11.1.7-1_amd64.deb
 	# first.... ensure Apache and nginx is not running.. 
 	sudo dpkg -i chef-server-11.deb
-	sudo apt-get update 
+	#sudo apt-get update 
 ** configure the same and restart it..
 	sudo chef-server-ctl reconfigure # ABSOLUTELY THE FIRST STEP 
 	https://ip_chef_servers # admin, chef-validator admin.pem/chef-validator.pem
@@ -21,9 +21,13 @@
 *** CHEF 12 SPECIFIC 
 ** create user
 	chef-server-ctl user-create USER_NAME FIRST_NAME LAST_NAME EMAIL 'PASSWORD' --filename FILE_NAME
+	chef-server-ctl user-create admin The Adminisrator code@code.com 'admin123' --filename /home/vagrant/admin.pem
 	# file_name is path to private key...
 ** create org.. 
    chef-server-ctl org-create short_name 'full_organization_name' --association_user user_name --filename ORGANIZATION-validator.pem
+   
+   chef-server-ctl org-create sevenstacks 'Seven Stacks Consultancy LLP' --association_user admin --filename /home/vagrant/sevenstacks-validator.pem
+
 
 *** Installing management console
     chef-server-ctl install chef-manage
@@ -105,6 +109,7 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 ## misc code... 
 sudo chef-server-ctl uninstall
 sudo chef-server-ctl stop
+# apt-get purge /yum remove 
 
 # see this link to see how to fix issue for certificates
 http://jtimberman.housepub.org/blog/2014/12/11/chef-12-fix-untrusted-self-sign-certs/

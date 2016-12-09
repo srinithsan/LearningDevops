@@ -290,6 +290,11 @@ cobbler import --path=/mnt/ --name=cent68-x86_64
 umount /mnt 
 
 wget http://mirrors.seas.harvard.edu/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-Everything-1511.iso
+mount -o loop /root/CentOS-7-x86_64-Everything-1511.iso /mnt/
+
+cobbler import --path=/mnt/ --name=cent72-x86_64
+umount /mnt 
+
 # Do same for Ubuntu
 wget http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-server-amd64.iso
 mount -o loop /root/ubuntu-14.04.3-server-amd64.iso /mnt/
