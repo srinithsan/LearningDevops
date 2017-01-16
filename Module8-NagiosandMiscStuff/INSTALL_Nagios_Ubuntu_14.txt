@@ -9,7 +9,7 @@ sudo apt-get install -y apache2 build-essential libgd2-xpm-dev openssl libssl-de
 sudo apt-get install -y mysql-server php5 php5-mysql php5-gd  libapache2-mod-php5
 
 #Nagios core...ReQUIRED FOR ONLY FOR SERVER. 
-#download nagios core...
+#download nagios core...0
 cd ~
 curl -L -O https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.2.1.tar.gz
  tar xvf nagios-*.tar.gz
@@ -35,7 +35,8 @@ sudo make install
     cd ~
     curl -L -O http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
 	
-	curl -L -O https://github.com/NagiosEnterprises/nrpe/archive/3.0.1.tar.gz
+	#curl -L -O https://github.com/NagiosEnterprises/nrpe/archive/3.0.1.tar.gz
+	# DONOT USE ABOVE UNLESS CORRESPONDING VERSIONS OF NAGIOS AND PLUGINS ARE ALSO UPDATED
 tar xvf nrpe-*.tar.gz
 cd nrpe-*
 ./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagios --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu

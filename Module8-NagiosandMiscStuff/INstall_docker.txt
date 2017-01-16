@@ -12,3 +12,4 @@ iptables -L
 #Alternatively set up docker to --iptables=FALSE 
 sudo service docker start
 sudo docker run hello-world
+
