@@ -35,5 +35,7 @@ do
         docker rm $i 2>&1 >/dev/null 
 done 
 docker rmi $param 2>&1 /dev/null
+# Build an image examples
+#docker build -t demo/jenkins . 
 
  
