@@ -12,12 +12,12 @@ RUN chmod 600 /root/.ssh/id_rsa \
 	&& chown root:root /root/.ssh/id_rsa*
 RUN apt-get update && apt-get install -y \
     openssh-server \ 
-	openjdk-8-jdk 
-	ant 
-	maven 
-	git 
-    && rm -rf /var/lib/apt/lists/*
- 	&& mkdir /var/run/sshd
+	openjdk-8-jdk \
+	ant \
+	maven \ 
+	git \
+    && rm -rf /var/lib/apt/lists/* \
+ 	&& mkdir /var/run/sshd \
 	&& mkdir /repos 
 
 RUN echo 'root:screencast' | chpasswd
