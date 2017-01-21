@@ -1,0 +1,39 @@
+#### Kill all running Containers
+for i in `docker ps -a | tail -n +2 | cut -d " " -f1`
+do
+	echo Stopping Container id $i 
+	docker stop $i 2>&1 > /dev/null
+	docker rm $i 2>&1 > /dev/null
+done 
+#### Remove all images forcibly 
+for i in `docker images | tail -n +2 | sed 's/\( \)[ ]*/\1/g' | cut -d " " -f3`
+do
+	echo Removing image ID: $i 
+	docker rmi -f $i 2>&1 > /dev/null 
+done
+## Note Removing an image forcibly does not remove associated container.. 
+# So if you do remove an image forcibly, make sure to remove the container also. 
+# Remove an image but stop all containers associated with it before.. 
+# Do some basic error checking in script as an example
+param=$1
+if [ -z "${param// }" ]
+then 
+   echo "Please pass image name to remove" 
+   exit 1 
+fi 
+echo Passed Image Name: $param
+docker images | grep $param 
+if [ $? -ne 0 ] 
+then 
+	echo No Such image $param
+	exit 1
+fi
+for i in `docker ps -a | grep $param | cut -d " " -f1` 
+do 
+	echo Removing container: $i
+        docker stop $i 2>&1 >/dev/null 
+        docker rm $i 2>&1 >/dev/null 
+done 
+docker rmi $param 2>&1 /dev/null
+
+ 
