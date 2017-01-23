@@ -38,11 +38,11 @@ docker rmi $param 2>&1 /dev/null
 # Build an image examples
 #docker build -t demo/jenkins . 
 
- 
+# Do see the script section also in same repository...  
 # nice links to know: 
 https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/
 https://www.ctl.io/developers/blog/post/dockerfile-add-vs-copy/
 https://blog.replicated.com/2016/02/05/refactoring-a-dockerfile-for-image-size/
 # Misc Stuff
 # if docker login does not work, check your names servers in /etc/resolv.conf
-# also ensure MTU is set to 1500 and net.ipv4.tcp_mtu_probing=1 in /etc/sysctl.conf
+# also ensure MTU is set to 1500 and net.ipv4.tcp_mtu_probing=1 in /etc/sysctl.conf NB: This is for Ubuntu 14.04 - adapt accordngly.. 
