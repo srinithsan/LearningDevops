@@ -28,8 +28,12 @@ do
 		docker rm $i 2>&1 >/dev/null
 done 
 
-docker tag $appname:$tagnumber $username/$appname:$tagnumber 
+docker tag $username/$appname $username/$appname:$tagnumber 
 docker push $username/$appname:$tagnumber
+docker push $username/$appname
 # Your call -- Do you want to keep all of this.. ?
+# Probably not.. 
+docker rmi $username/$appname:$tagnumber 
+docker pull $username/$appname
 #docker rmi $param 2>&1 /dev/null
 
