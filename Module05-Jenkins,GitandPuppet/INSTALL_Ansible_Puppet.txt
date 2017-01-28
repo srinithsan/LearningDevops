@@ -116,7 +116,9 @@ systemctl start puppet
 # on server. 
 	pupper cert list 
 	puppet cert sign <your cert name> 
+	puppet cert list --allow-dns-alt-names <your cert name> 
 # on Client, run 
+	puppet agent --enable
 	puppet agent -t 
 # Code .. see class Notes_session
 ## Other interstng commands 

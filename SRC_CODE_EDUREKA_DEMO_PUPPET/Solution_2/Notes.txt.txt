@@ -1,0 +1,4 @@
+This is a very simple updation of earlier code. WE now move code into classes (Java and tomcat)
+There is stil no error checking, no separation of data and does not handle several use cases including runnning multiple tomcats or at different ports. 
+
+

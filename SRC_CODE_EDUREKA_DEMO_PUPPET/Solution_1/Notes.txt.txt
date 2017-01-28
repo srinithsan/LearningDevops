@@ -1,0 +1,5 @@
+All code is included in one single site.pp file. The file uses no classes, assumes Ubuntu as base and importantly all it does is to install Java directly before running Tomcat. It does not support services, does not include checks for if java is already installed. 
+
+It is meant only to illustrate how to use puppet to get started with only and is not meant for Production Use. 
+
+

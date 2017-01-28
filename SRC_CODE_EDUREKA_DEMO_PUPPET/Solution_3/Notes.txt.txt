@@ -1,0 +1,6 @@
+We now expand our code base to see that a single class will not work. 
+We use java::params as a class to hold default values. This solution then gets modified in conjunction with Hiera to pass node specicic data. 
+We have only included java code here - tomcat follows similar code and is left as self "assignment"
+This forms the basis for modules and where these classes are going to be located.
+
+

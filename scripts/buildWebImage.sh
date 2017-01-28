@@ -1,5 +1,6 @@
 cd /home/edureka/dockerfiles/myapp
 param=seshagirisriram/addressbook:$1
+# param=seshagirisriram/addressbook:14 
 echo PARAM -- $param `pwd`
 export DOCKER_HOST=tcp://192.168.1.11:2376
 echo "Now setting $DOCKER_HOST"
