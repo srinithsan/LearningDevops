@@ -22,7 +22,7 @@ make all
     sudo make install-config
     sudo /usr/bin/install -c -m 644 sample-config/httpd.conf /etc/apache2/sites-available/nagios.conf
 
-	#sudo usermod -G nagcmd www-data
+	sudo usermod -G nagcmd www-data
 #Plugins
 cd ~
 curl -L -O http://nagios-plugins.org/download/nagios-plugins-2.1.2.tar.gz
