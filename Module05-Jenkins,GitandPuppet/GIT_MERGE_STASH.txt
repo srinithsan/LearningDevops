@@ -1,0 +1,10 @@
+Stages --> 
+	1 common Ancestor
+	2 Ours
+	3 Theirs 
+git show :1:h.txt
+git show :2:h.txt
+git show :3:h.txt
+
+https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging
+https://git-scm.com/docs/git-stash
