@@ -22,8 +22,9 @@ cd
 cat /tmp/id_rsa.pub >> ./.ssh/authorized_keys 
 
 # Create a directory adnd initialize an empty directory 
-mkdir -p /opt/git/starter.git
-cd /opt/git/starter.git 
+
+mkdir -p /home/git/starter.git
+cd /home/git/starter.git 
 git init --bare 
 # This directory should be writable by gituser...
 . 
