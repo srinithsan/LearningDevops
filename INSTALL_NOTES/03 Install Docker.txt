@@ -28,3 +28,7 @@ sudo docker run hello-world
 # e.g DOCKER_OPTS="-H tcp://192.168.1.11:2376" 
 # set DOCKER_HOST in /etc/profile and restart server
 # eg.export DOCKER_HOST=tcp://192.168.1.11:2376
+
+# installing compose.. 
+curl -L https://github.com/docker/compose/releases/download/1.11.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
