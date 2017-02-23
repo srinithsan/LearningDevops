@@ -213,7 +213,8 @@ bundle exec rake spec
 bundle exec rspec spec/acceptance
 RS_DEBUG=yes bundle exec rspec spec/acceptance
 
-### ANsible playbooks
+### ANsible playbo
+oks
 debops.org
 ansible-galaxy install sprylab.tomcat-ubuntu
 ansible-playbook tomcat.yml -f 10
