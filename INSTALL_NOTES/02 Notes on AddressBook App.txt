@@ -21,7 +21,7 @@
 	  sudo apt-add-repository ppa:andrei-pozolotin/maven3 #Add repos
 	  apt-get purge -y maven maven2 && apt-get install -y maven3 # Install 
 # The flow of Steps and sequence are as follows 
-	Task				Goal						Any other Action
+	Task				Goal/Any other Action
 	Documentation		javadoc:javadoc 
 	Code Review			pmd:pmd
 	Unit Test/Report	cobertura:cobertura			Publish HTML reports 

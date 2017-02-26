@@ -76,6 +76,9 @@ wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
 sudo dpkg -i puppetlabs-release-trusty.deb
 sudo apt-get update
 sudo apt-get install puppetmaster 
+
+
+
 #Edir /etc/puppet/puppet.conf edit below 2 lines
 [main]
 dns_alt_names = demo1,demo1.sridemo.com
