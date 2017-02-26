@@ -48,19 +48,3 @@ class java {
 }
 
 
-class {'java':'distribution' => 'jre', 'version'  => '7.0'}-> class{'tomcat':} #Before -> Notify ~>
-#class {'tomcat':} 
-
-#Java 7 -> Tomcat 7 (tomcat 7 service is runinng) 
-#Java 8 -> Tomcat 7 (Java 8 will be installed, will not restart the tomcat 7 service0 
-#Java 8 ~> Tomcat 7 (Java 8 will be installed and tomcat 7 service will be restarted) 
-#Java 8 ~> Tomcat 8 (Will skip java8, install Tomcat 8 and start tomcay 8 service) 
-
-
-$_  = 10
-$__ = 20 
-
-$a = 10 
-$b = 20 
-$c = 30 
-[$a, $b, $c] = [10,20,30] 

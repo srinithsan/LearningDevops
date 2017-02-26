@@ -39,7 +39,7 @@ class java {
 		ensure => present,
 		notify => Exec['install'],
 		}
-	}
+	  }
 	exec { 'install':
 		path => '/bin:/usr/sbin:/usr/bin:/sbin',
 		command => 'add-apt-repository -y ppa:openjdk-r/ppa && apt-get update && apt-get install -y openjdk-8-jdk',
