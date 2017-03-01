@@ -1,0 +1,72 @@
+*** Changing vi not to use colors 
+edit *** your *** .vimrc file found in $HOME
+e.g. 
+	Ubuntu --> /home/ubuntu/.vimrc
+	root --> /root/.vimrc
+	jenkins -> /var/lib/jenkins/.vimrc
+Add the following lines: 
+syntax off
+set nohlsearch
+set t_Co=0
+
+**** Enabling CSS inside HTML files 
+edit /etc/init.d/jenkins (Just see this file...) 
+Add one line (Ubuntu) 	JAVA_ARGS="-Dhudson.model.DirectoryBrowserSupport.CSP="
+in Centos, this line would be: 
+JENKINS_JAVA_OPTIONS="-Dhudson.model.DirectoryBrowserSupport.CSP="
+
+restart jenkins
+	On Ubuntu 14/Centos 6.8, 
+		sudo service jenkins restart 
+	on ubuntu 16.4
+		sudo systemctl daemon-reload
+		sudo service jenkins restart 
+
+**** installing Jenkins on Ubuntu
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add - 
+sudo sh -c 'echo "deb https://pkg.jenkins.io/debian-stable binary/" >> /etc/apt/sources.list'
+sudo apt-get update && sudo apt-get install -y jenkins
+
+***** installing Jenkins on RHEL/Centos
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+yum install -y jenkins
+
+
+*** If you are experiencing issues with Ubuntu 16 (not reproducible on Ubuntu 14/Centos and even on Ubuntu 16 if you follow steps) 
+see: https://issues.jenkins-ci.org/browse/JENKINS-33210
+https://issues.jenkins-ci.org/browse/JENKINS-33210
+
+****** Normal file paths
+/usr/lib/jvm/java-8-openjdk-amd64/
+/usr/share/ant (/opt/ant, if you follow instructions)
+/usr/share/maven (/opt/maven, if you follow instructions)
+
+*** Link Ubuntu 16 
+http://jenkins2-ubuntu.sapient-demo.com:8080/
+*** Link: Centos 6.8
+http://jenkins-demo.sapient-demo.com:8080/
+
+
+### Install JBOSS 7.1.1 Final on Centos 6.8 
+http://www.opensourcearchitect.co/resources/tutorials/installing-jboss-7-1-on-centos-6
+
+wget http://download.jboss.org/jbossas/7.0/jboss-as-7.0.0.Final/jboss-as-7.0.0.Final.zip
+sudo yum install -y unzip 
+sudo unzip jboss-as-7.0.0.Final.zip -d /usr/share
+sudo adduser jboss
+sudo passwd -d jboss 
+sudo  chown -fR jboss.jboss /usr/share/jboss-as-7.0.0.Final/
+ 
+ su jboss
+cd /usr/share/jboss-as-7.0.0.Final/bin/
+#for 7.1.1 ./add-user.sh
+./standalone.sh -Djboss.bind.address=0.0.0.0-Djboss.bind.address.management=0.0.0.-&
+
+http://yourip::9990/
+./jboss-cli.sh --connect command=:shutdown
+
+
+ 
+
+https://docs.jboss.org/author/display/AS7/Application+deployment

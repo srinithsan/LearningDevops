@@ -4,8 +4,6 @@
 :yaml:
   :datadir: "/etc/puppet/environments/%{environment}/hieradata"
 :hierarchy:
-  - "%{profile}/common 
-  - "environments/%{environment}/%{::trusted.certname}"
   - "%{::trusted.certname}"
   - common
   

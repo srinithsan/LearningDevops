@@ -1,0 +1,7 @@
+wget http://redrockdigimark.com/apachemirror/tomcat/tomcat-8/v8.5.11/bin/apache-tomcat-8.5.11.tar.gz
+sudo tar xvfvz apache-tomcat-8.5.11.tar.gz -C /opt
+sudo ln -s /opt/apache-tomcat-8.5.11 /opt/tomcat
+sudo sh -c 'echo CATALINA_HOME=/opt/tomcat >> /etc/environment'
+sudo sh -c 'echo CATALINA_BASE=/opt/tomcat >> /etc/environment'
+# at this point, log out and log back in and cd /opt/tomcat
+# to start, cd /opt/tomcat/bin && ./catalina.sh start
