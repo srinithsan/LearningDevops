@@ -26,8 +26,8 @@
 	Code Review			pmd:pmd
 	Unit Test           test
 	Unit Test/Report	cobertura:cobertura			Publish HTML reports 
-	Deploy to Test 		package	-DskipTests=true	Deploy to Container, Archive
-	Functional/Int Test	test -Pfunctional-test -DSkipUTs=true
+	Deploy to Test 		package -DskipTests=true	Deploy to Container, Archive
+	Functional/Int Test	test -Pfunctional-test -DSkipUTs=true -DskipTests=true
 						Publish HTML
 	Web Test			verify -Pweb-test -DskipUTs
 	Deploy to Prod									Deploy to Container
