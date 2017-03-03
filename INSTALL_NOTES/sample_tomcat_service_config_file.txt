@@ -5,7 +5,7 @@ description "Tomcat 8 Server"
   respawn
   respawn limit 10 5
   setuid tomcat8
-  setgid tomcat
+  setgid tomcat8
   env JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
   env CATALINA_HOME=/opt/tomcat8
    #Modify these options as needed

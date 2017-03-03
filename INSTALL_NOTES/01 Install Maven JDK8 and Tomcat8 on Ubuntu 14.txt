@@ -21,7 +21,10 @@ update-alternatives --config javac # in prompt, if one, select version of javac
 # add user tomcat
 sudo groupadd tomcat
 # add user tomcat8 
-sudo useradd -s /bin/false -g tomcat -d /opt/tomcat8 tomcat8
+sudo useradd -s /bin/bash -g tomcat -d /opt/tomcat8 tomcat8
+# actual version
+#sudo useradd -s /bin/false -g tomcat -d /opt/tomcat8 tomcat8
+
 # get code for tomcat 8 
 # update URL as required. 
 #wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.9/bin/apache-tomcat-8.5.9.tar.gz

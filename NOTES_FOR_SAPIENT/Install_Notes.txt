@@ -1,6 +1,9 @@
 ***** Install JDK 8 on Centos 6.8 
 	 sudo yum install -y java-1.8.0-openjdk
 	 sudo yum install -y java-1.8.0-openjdk-devel
+	 
+	 sudo yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel git
+	 
 
 *****Install Ant on Centos 6.8 
 	sudo yum install -y ant # NOT RECOMMENDED
