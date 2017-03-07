@@ -1,3 +1,5 @@
+# Note: 
+  Material specific to SAPIENT has been moved to [SAPIENT_LM](https://github.com/SeshagiriSriram/SAPIENT_LM)
 # Introduction
 The following directory (project) is intended for additional materials on Devops. This is still work in project as we clean up to  
 *  logically organize the folders and materials
@@ -5,7 +7,7 @@ The following directory (project) is intended for additional materials on Devops
 
 The main material is organized into 8 modules: 
 * Module 1: Getting Started with Devops
-* Module 2: common Infra Structure Servers
+* Module 2: common Infra Structure Servers# 
 * Module 3: Bare Metal Server installs, Package Managers
 * Module 4: Performance Monitoring and basic security
 * Module 5: Jenkins and Puppet
