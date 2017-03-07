@@ -1,0 +1,2 @@
+ssh tomcat8@tomcat-qa.sapient-demo.com 'echo  \*\*\**\*\* `hostname` && ls
+-al webapps'
