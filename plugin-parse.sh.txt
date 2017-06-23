@@ -1,0 +1,57 @@
+#!/bin/sh
+# Testing Input file
+#Author Sriram Varadharajan
+echo "XML starlet should be installed before executing this script"
+if [ $# -eq 0 ]
+then
+        echo "Usage : plugin-parse.sh <input filename>"
+        exit 
+fi
+FNAME=$1
+export FNAME
+if [ ! -f $FNAME -o ! -s $FNAME ]
+then
+ echo "Input File Wrong or  Size of file is Zero "
+echo "Usage : plugin-parse.sh <input filename>"
+        exit 
+fi
+
+ne=`xml el $FNAME`
+if [ -z "$ne" ]
+then
+echo "No elements in the xml - Pls scheck"
+echo "Usage : plugin-parse.sh <input filename>"
+        exit 
+fi
+
+echo " --------------------------------------BEGIN--------------------------------------------------------"
+echo "VirtualHost Settings"
+cat $1 | xml sel -t -m "Config/VirtualHostGroup/VirtualHost" -v @Name -n
+echo " --------------------------------------END--------------------------------------------------------"
+echo "Log Level"
+echo " --------------------------------------BEGIN--------------------------------------------------------"
+cat $1 | xml sel -t -m "Config/Log" -v "concat('LogLevel :',@LogLevel)"
+echo " --------------------------------------END--------------------------------------------------------"
+echo "Instance Settings "
+echo " --------------------------------------BEGIN--------------------------------------------------------"
+cat $1 | xml sel -t -m "Config/ServerCluster" -v "concat('ClusterName:',@Name,'*~','cloneid:',Server/@CloneID,'*~','MaxConnections :',Server/@MaxConnections,'*~','ServerIOTimeout :',Server/@ServerIOTimeout,'*~','WaitForContinue :',Server/@WaitForContinue,'*~')" | tr "*~" "\n"
+#cat $1 | xml sel -t -m "Config/ServerCluster" -v "concat('ClusterName:',@Name,'*~','cloneid:',Server/@CloneID,'*~','Instance Name :',Server/@Name,'*~','Transport ',Server/Transport/@Hostname,'*~','MaxConnections :',Server/@MaxConnections,'*~','ServerIOTimeout :',Server/@ServerIOTimeout,'*~','WaitForContinue :',Server/@WaitForContinue,'*~')" | tr "*~" "\n"
+echo "--------------------------------------END--------------------------------------------------------"
+echo "Instance Host Settings"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+for iname in `cat $1 | xml sel -t -m "Config/ServerCluster/Server" -v @Name -n`
+do
+echo "Instance Name :" $iname
+cat $1 | xml sel -t -m "Config/ServerCluster/Server[@Name='$iname']/Transport[@Protocol='https']" -v "concat('Https Port  :', @Port,'*~','Hostname :',@Hostname,'*~')" | tr "*~" "\n"
+cat $1 | xml sel -t -m "Config/ServerCluster/Server[@Name='$iname']/Transport[@Protocol='http']" -v "concat('Http Port  :', @Port,'*~','Hostname :',@Hostname,'*~')" | tr "*~" "\n"
+echo "---------------------------------------------------------------------------------------------------"
+done
+echo "--------------------------------------END--------------------------------------------------------"
+echo "URI Settings"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+cat $1 | xml sel -t -m "Config/UriGroup/Uri" -v "concat('URI  :', @Name,'*~','Affinity :',@AffinityCookie,'*~')" | tr "*~" "\n"
+echo "--------------------------------------END--------------------------------------------------------"
+echo "ESI Cache Size Settings"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+cat $1 | xml sel -t -m "Config/Property[@Name='ESIMaxCacheSize']" -v "concat('ESIMaxCacheSize  :', @Value,'*~')" | tr "*~" "\n"
+echo "--------------------------------------END--------------------------------------------------------"

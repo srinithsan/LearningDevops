@@ -1,0 +1,89 @@
+#!/bin/sh
+# Testing Input file
+#Author Sriram Varadharajan
+if [ $# -eq 0 ]
+then
+        echo "Usage : plugin-parse.sh <input filename>"
+        exit 
+fi
+FNAME=$1
+export FNAME
+if [ ! -f $FNAME -o ! -s $FNAME ]
+then
+ echo "Input File Wrong or  Size of file is Zero "
+echo "Usage : plugin-parse.sh <input filename>"
+        exit 
+fi
+
+echo "KeepAlive On Settings"
+found=`cat $FNAME | sed 's/^ *//' | grep -v "^#" | grep -c "KeepAlive On"`
+if [ $found -eq 0 ]
+then 
+        echo "KeepAlive=On"
+else 
+        echo "KeepAlive not Set"
+fi
+echo "MaxKeepAliveRequests"
+echo " --------------------------------------BEGIN--------------------------------------------------------"
+MaxKeepAliveRequests=`cat $FNAME | sed 's/^ *//' |  grep -v "^#" | grep MaxKeepAliveRequests | tr -dc '0-9'`
+   if [ -z "$MaxKeepAliveRequests" ]
+   then
+       echo "MaxKeepAliveRequests=NotSet"
+   else
+
+       echo "MaxKeepAliveRequests=$MaxKeepAliveRequests"
+   fi
+
+echo " --------------------------------------END--------------------------------------------------------"
+
+echo "KeepAliveTimeout"
+echo " --------------------------------------BEGIN--------------------------------------------------------"
+KeepAliveTimeout=`cat $FNAME | sed 's/^ *//'|  grep -v "^#" | grep KeepAliveTimeout | tr -dc '0-9'`
+if [ -z "$KeepAliveTimeout" ]
+then
+  echo "KeepAliveTimeout=NotSet"
+else
+echo "KeepAliveTimeout=$KeepAliveTimeout"
+fi
+echo "--------------------------------------END--------------------------------------------------------"
+echo "Cache-Control Settings"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+expires_module=`cat $FNAME | sed 's/^ *//'|  grep -v "^#" | grep  "LoadModule expires_module"`
+headers_module=`cat $FNAME | sed 's/^ *//'|  grep -v "^#" | grep  "LoadModule headers_module"`
+settings=`cat $FNAME | sed 's/^ *//'|  grep -v "^#" | sed -n '/<IfModule mod_headers.c>/,/<\/IfModule>/p'`
+if  [ ! -z "$expires_module" -o ! -z "$headers_module" ]
+then
+   if [ ! -z "$settings" ]
+   then
+       echo Cache_Control= $expires_module $headers_module $settings
+   fi
+else
+echo "Cache Expire Module or headers_module  Not Set correctly" $expires_module $headers_module
+fi 
+echo "--------------------------------------END--------------------------------------------------------"
+echo "Http Compression Settings"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+cat $FNAME | sed 's/^ *//'|  grep -v "^#" | grep "AddEncoding"
+deflate=`cat $FNAME | sed 's/^ *//'|   grep -v "^#" |  sed -n '/deflate_module modules\/mod_deflate.so/,/<\/Location>/p'`
+   if [ ! -z "$deflate" ]
+   then
+       echo deflate=$deflate
+   fi
+ 
+echo "--------------------------------------END--------------------------------------------------------"
+echo "Web Server method restriction"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+directory_perm=`cat $FNAME | sed 's/^ *//'|   grep -v "^#" |  sed -n '/<Directory \/>/,/<\/Location>/p'`
+   if [ ! -z "$directory_perm" ]
+   then
+       echo directory_perm=$directory_perm
+   fi
+echo "--------------------------------------END--------------------------------------------------------"
+
+echo "File Compression Settings"
+echo "--------------------------------------BEGIN--------------------------------------------------------"
+AddOutputFilterByType=`cat $FNAME | sed 's/^ *//' | grep -i AddOutputFilterByType`
+DeflateCompressionLevel=`cat $FNAME | sed 's/^ *//' | grep DeflateCompressionLevel`
+echo "AddOutputFilterByType=$AddOutputFilterByType"
+echo "DeflateCompressionLevel=$DeflateCompressionLevel"
+echo "--------------------------------------END--------------------------------------------------------"
